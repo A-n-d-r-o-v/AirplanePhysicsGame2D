@@ -6,15 +6,21 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "My airplane works!");
-    sf::CircleShape shape(100.f);
+    int cameraLookahead = 300;
 
     // (Load configuration with auto-scaling)
     std::vector<Eigen::Vector2d> vertices{
         Eigen::Vector2d(0.0, 0.0),
+        Eigen::Vector2d(10.0, 10.0),
         Eigen::Vector2d(20.0, 30.0),
-        //Eigen::Vector2d(20.0, 40.0),
-        Eigen::Vector2d(200.0, 0.0),
-        Eigen::Vector2d(400.0, 36.0),
+        Eigen::Vector2d(20.0, 37.0),
+        Eigen::Vector2d(50.0, 35.0),
+        Eigen::Vector2d(110.0, 20.0),
+        Eigen::Vector2d(160.0, 0.0),
+        Eigen::Vector2d(210.0, 0.0),
+        Eigen::Vector2d(290.0, 30.0),
+        Eigen::Vector2d(420.0, 42.0),
+        Eigen::Vector2d(400.0, 47.0),
         Eigen::Vector2d(300.0, 50.0),
         Eigen::Vector2d(0.0, 50.0)
     };
@@ -22,7 +28,8 @@ int main()
     Polygon planeShape = Polygon{ vertices };
     PhysicsObject planeObj = PhysicsObject(planeShape, 100, 1);
 
-    shape.setFillColor(sf::Color::Green);
+    sf::View playerView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+    playerView.zoom(2.0f);
 
     while (window.isOpen())
     {
@@ -32,13 +39,17 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        playerView.setCenter(planeObj.globalPosition().x() + cameraLookahead, planeObj.globalPosition().y());
+        window.setView(playerView);
+
+        // TODO: Create world with point indicators.
 
         window.clear();
 
         window.draw(planeObj.shape());
-        //planeObj.globalTranslate(Eigen::Vector2d{ 0.005, 0 });
-        planeObj.translateForward(0.05);
-        planeObj.rotateAroundCOM(-0.0003);
+        planeObj.globalTranslate(Eigen::Vector2d{ 0.02, 0.01 });
+        planeObj.translateForward(0.02);
+        planeObj.rotateAroundCOM(-0.00003);
 
         window.display();
     }

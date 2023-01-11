@@ -73,5 +73,9 @@ std::vector<Eigen::Vector2d>& Triangle::getVertices()
 	return vertices_;
 }
 
+const std::vector<Eigen::Vector2d>& Triangle::getVertices() const
+{
+	return vertices_;
+}
 
 

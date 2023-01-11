@@ -44,6 +44,11 @@ Polygon PhysicsObject::shape() const
 	return shape_;
 }
 
+Eigen::Vector2d PhysicsObject::globalPosition() const
+{
+	return globalPosition_;
+}
+
 void PhysicsObject::rotateAroundCOM(double theta)
 {
 	//calculateLocalCOM();

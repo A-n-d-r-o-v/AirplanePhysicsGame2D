@@ -137,13 +137,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AirplanePhysicsSim2D.cpp" />
-    <ClCompile Include="Panel.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Panel.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Triangle.h" />

@@ -26,6 +26,8 @@ public:
 
 	Polygon shape() const;
 
+	Eigen::Vector2d globalPosition() const;
+
 	void rotateAroundCOM(double theta); // TODO: Public for testing purposes, should be private
 
 private:
