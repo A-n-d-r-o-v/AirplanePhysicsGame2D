@@ -23,9 +23,9 @@ public:
 
 	//void applyForce(const Eigen::Vector2d& force); // Apply force, move and rotate accordingly
 
-	const Eigen::Vector2d toWorldSpace(const Eigen::Vector2d& coordinate);
+	const Eigen::Vector2d toWorldSpace(const Eigen::Vector2d& coordinate, double theta);
 
-	const Eigen::Vector2d toLocalSpace(const Eigen::Vector2d& coordinate);
+	const Eigen::Vector2d toLocalSpace(const Eigen::Vector2d& coordinate, double theta);
 
 	virtual void update(double dt);
 
@@ -63,11 +63,15 @@ protected:
 	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi
 
 private:
+	double gravityConstant_ = 0.0003;
+
 	Eigen::Vector2d localVelocity_;
 
 	void updateLocalVelocity(); // Update local velocity.
 
 	void updateWorldVelocity(); // Calculate and update world velocity, including angular velocity.
+
+	void applyGravity();
 
 };
 

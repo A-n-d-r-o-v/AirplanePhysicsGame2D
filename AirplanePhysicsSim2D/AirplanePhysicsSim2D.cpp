@@ -32,10 +32,16 @@ int main()
     sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
     playerView.zoom(2.0f);
 
-    sf::CircleShape aCircle(50);
-    aCircle.setFillColor(sf::Color(100, 250, 50));
-    float circleX = 600;
-    float distanceTravelled = 0;
+    std::vector<sf::CircleShape> circles;
+    for (int i = 0; i < 30; ++i) {
+        for (int j = -15; j < 5; ++j) {
+            sf::CircleShape circle;
+            circle.setFillColor(sf::Color(100, 250, 50));
+            circle.setRadius(20);
+            circle.setPosition(i * 1000, j * 1000);
+            circles.emplace_back(circle);
+        }
+    }
 
     while (window.isOpen())
     {
@@ -54,14 +60,9 @@ int main()
 
         window.draw(planeObj.shape());
 
-        distanceTravelled += planeObj.localVelocity().x();
-        if (distanceTravelled > 2*window.getSize().x) {
-            circleX += 2*distanceTravelled;
-            distanceTravelled = 0;
+        for (const auto& circle : circles) {
+            window.draw(circle);
         }
-
-        aCircle.setPosition(circleX, -100);
-        window.draw(aCircle);
         
         planeObj.applyInput();
         

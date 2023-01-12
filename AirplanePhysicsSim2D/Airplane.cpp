@@ -3,11 +3,8 @@
 void Airplane::update(double dt)
 {
 	PhysicsObject::update(dt); // Call base class update
-	
-	angleToGround_ = toGroundAngle(angle_);
-	calculateAngleOfAttack();
 
-	upsideDown_ = isUpsideDown();
+	calculateState();
 
 	// Apply drag
 	calculateDrag();
@@ -51,6 +48,14 @@ void Airplane::pitch(double angularForce)
 	double angularAcceleration = angularForce / mass_;
 
 	worldAngularAcceleration_ = angularAcceleration;
+}
+
+void Airplane::calculateState()
+{
+	angleToGround_ = toGroundAngle(angle_);
+	calculateAngleOfAttack();
+
+	upsideDown_ = isUpsideDown();
 }
 
 // TODO: AOA should calculate difference between angle (currently AOA) and velocity direction (from global velocity)

@@ -40,21 +40,21 @@ void PhysicsObject::translateForward(double delta)
 
 void PhysicsObject::addLocalVelocity(const Eigen::Vector2d& delta)
 {
-	worldVelocity_ += toWorldSpace(delta);
-	localVelocity_ = toLocalSpace(worldVelocity_);
+	worldVelocity_ += toWorldSpace(delta, angle_); // Add world velocity relative to object angle
+	localVelocity_ = toLocalSpace(worldVelocity_, velocityAngle_); // Calculate local velocity from world velocity
 }
 
 
-Eigen::Vector2d const PhysicsObject::toWorldSpace(const Eigen::Vector2d& coordinate)
+Eigen::Vector2d const PhysicsObject::toWorldSpace(const Eigen::Vector2d& coordinate, double theta)
 {
-	Eigen::Rotation2Dd t(-angle_);
+	Eigen::Rotation2Dd t(-theta);
 	Eigen::Matrix2d rotMat = t.toRotationMatrix();
 	return Eigen::Vector2d { rotMat * coordinate };
 }
 
-const Eigen::Vector2d PhysicsObject::toLocalSpace(const Eigen::Vector2d& coordinate)
+const Eigen::Vector2d PhysicsObject::toLocalSpace(const Eigen::Vector2d& coordinate, double theta)
 {
-	Eigen::Rotation2Dd t(-angle_);
+	Eigen::Rotation2Dd t(-theta);
 	Eigen::Matrix2d rotMat = t.inverse().toRotationMatrix();
 	return Eigen::Vector2d { rotMat * coordinate };
 }
@@ -71,6 +71,7 @@ void PhysicsObject::update(double dt)
 
 	globalTranslate(worldVelocity_ * dt);
 	rotateAroundCOM(worldAngularVelocity_ * dt);
+	applyGravity();
 }
 
 void PhysicsObject::updateLocalVelocity()
@@ -80,7 +81,7 @@ void PhysicsObject::updateLocalVelocity()
 
 void PhysicsObject::updateWorldVelocity()
 {
-	worldAcceleration_ = toWorldSpace(localAcceleration_);
+	worldAcceleration_ = toWorldSpace(localAcceleration_, angle_);
 
 	worldVelocity_ += worldAcceleration_;
 	worldAngularVelocity_ += worldAngularAcceleration_;
@@ -117,4 +118,9 @@ double PhysicsObject::wrapAngle(double theta)
 double PhysicsObject::angle(Eigen::Vector2d vec)
 {
 	return atan2(-vec.y(), vec.x());
+}
+
+void PhysicsObject::applyGravity()
+{
+	worldVelocity_.y() += (gravityConstant_ * gravityScale_);
 }
