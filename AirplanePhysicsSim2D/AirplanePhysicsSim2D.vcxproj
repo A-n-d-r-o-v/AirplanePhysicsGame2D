@@ -136,12 +136,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Airplane.cpp" />
     <ClCompile Include="AirplanePhysicsSim2D.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Airplane.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Triangle.h" />

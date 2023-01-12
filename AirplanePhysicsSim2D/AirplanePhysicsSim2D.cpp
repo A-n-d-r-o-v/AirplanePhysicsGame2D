@@ -2,6 +2,7 @@
 #include <Eigen/Core>
 #include "polygon.h"
 #include "physicsobject.h"
+#include "airplane.h"
 
 int main()
 {
@@ -26,10 +27,15 @@ int main()
     };
     
     Polygon planeShape = Polygon{ vertices };
-    PhysicsObject planeObj = PhysicsObject(planeShape, 100, 1);
+    Airplane planeObj = Airplane(planeShape, 1000, 1);
 
-    sf::View playerView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+    sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
     playerView.zoom(2.0f);
+
+    sf::CircleShape aCircle(50);
+    aCircle.setFillColor(sf::Color(100, 250, 50));
+    float circleX = 600;
+    float distanceTravelled = 0;
 
     while (window.isOpen())
     {
@@ -39,7 +45,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        playerView.setCenter(planeObj.globalPosition().x() + cameraLookahead, planeObj.globalPosition().y());
+        playerView.setCenter((float) (planeObj.globalPosition().x() + cameraLookahead), (float) (planeObj.globalPosition().y()));
         window.setView(playerView);
 
         // TODO: Create world with point indicators.
@@ -47,9 +53,27 @@ int main()
         window.clear();
 
         window.draw(planeObj.shape());
-        planeObj.globalTranslate(Eigen::Vector2d{ 0.02, 0.01 });
-        planeObj.translateForward(0.02);
-        planeObj.rotateAroundCOM(-0.00003);
+
+        distanceTravelled += planeObj.localVelocity().x();
+        if (distanceTravelled > 2*window.getSize().x) {
+            circleX += 2*distanceTravelled;
+            distanceTravelled = 0;
+        }
+
+        aCircle.setPosition(circleX, -100);
+        window.draw(aCircle);
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            planeObj.thrust(0.5);
+        }
+        else {
+            planeObj.thrust(0);
+        }
+        
+        planeObj.update(1.0);
+        //planeObj.globalTranslate(Eigen::Vector2d{ 0.02, 0.01 });
+        //planeObj.translateForward(0.02);
+        //planeObj.rotateAroundCOM(-0.00003);
 
         window.display();
     }
