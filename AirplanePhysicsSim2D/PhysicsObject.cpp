@@ -122,5 +122,5 @@ double PhysicsObject::angle(Eigen::Vector2d vec)
 
 void PhysicsObject::applyGravity(double dt)
 {
-	worldVelocity_.y() += (gravityConstant_ * gravityScale_ * dt);
+	worldVelocity_.y() += (gravityConstant_/mass_ * gravityScale_ * dt);
 }
