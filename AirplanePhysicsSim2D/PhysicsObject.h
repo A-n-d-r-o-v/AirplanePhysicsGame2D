@@ -21,8 +21,6 @@ public:
 
 	//void applyForce(const Eigen::Vector2d& force); // Apply force, move and rotate accordingly
 
-	void thrust(double forwardForce);
-
 	const Eigen::Vector2d toWorldSpace(const Eigen::Vector2d& coordinate);
 
 	virtual void update(double dt);
@@ -51,7 +49,11 @@ protected:
 
 	double worldAngularVelocity_;
 	double worldAngularAcceleration_;
-	//Eigen::Vector2d localVelocity_; // Derived from globalVelocity and angle
+
+private:
+	void updateLocalVelocity(); // Update local velocity.
+
+	void updateWorldVelocity(); // Calculate and update world velocity, including angular velocity.
 
 };
 

@@ -63,12 +63,7 @@ int main()
         aCircle.setPosition(circleX, -100);
         window.draw(aCircle);
         
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            planeObj.thrust(0.5);
-        }
-        else {
-            planeObj.thrust(0);
-        }
+        planeObj.applyInput();
         
         planeObj.update(1.0);
         //planeObj.globalTranslate(Eigen::Vector2d{ 0.02, 0.01 });

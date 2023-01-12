@@ -39,13 +39,6 @@ void PhysicsObject::translateForward(double delta)
 }
 
 
-void PhysicsObject::thrust(double forwardForce)
-{
-	Eigen::Vector2d thrustVec{ forwardForce/mass_, 0 };
-
-	localAcceleration_ = thrustVec;
-}
-
 Eigen::Vector2d const PhysicsObject::toWorldSpace(const Eigen::Vector2d& coordinate)
 {
 	Eigen::Rotation2Dd t(-angle_);
@@ -55,16 +48,26 @@ Eigen::Vector2d const PhysicsObject::toWorldSpace(const Eigen::Vector2d& coordin
 
 void PhysicsObject::update(double dt)
 {
-	localVelocity_ += localAcceleration_;
-	worldAcceleration_ = toWorldSpace(localAcceleration_);
-
-	worldVelocity_ += worldAcceleration_;
-	worldAngularVelocity_ += worldAngularAcceleration_;
+	updateLocalVelocity();
+	updateWorldVelocity();
 
 	//std::cout << "World velocity: " << worldVelocity_.x() << ", " << worldVelocity_.y() << std::endl;
 
 	globalTranslate(worldVelocity_ * dt);
 	rotateAroundCOM(worldAngularVelocity_ * dt);
+}
+
+void PhysicsObject::updateLocalVelocity()
+{
+	localVelocity_ += localAcceleration_;
+}
+
+void PhysicsObject::updateWorldVelocity()
+{
+	worldAcceleration_ = toWorldSpace(localAcceleration_);
+
+	worldVelocity_ += worldAcceleration_;
+	worldAngularVelocity_ += worldAngularAcceleration_;
 }
 
 Polygon PhysicsObject::shape() const
