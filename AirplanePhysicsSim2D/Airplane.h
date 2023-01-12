@@ -26,11 +26,11 @@ private:
 	double dragAOABias_ = 0.1; // Drag AOA bias
 	double dragScale_ = 0.7; // Drag scale
 
-	double liftAOAMultiplier_ = 0.4; // AOA impact on lift
-	double liftAOABias_ = 0.2;
-	double liftScale_ = 3;
+	double liftAOAMultiplier_ = 1; // AOA impact on lift
+	double liftAOABias_ = 0.1;
+	double liftScale_ = 10;
 
-	double thrustPower_ = 1.5; // Applied thrust force from input
+	double thrustPower_ = 0.6; // Applied thrust force from input
 	double pitchPower_ = 0.0006; // Applied angular force from input
 	/* ---------------- */
 
@@ -45,7 +45,7 @@ private:
 
 	bool upsideDown_;
 
-	void calculateState(double dt);
+	void calculateState();
 
 	static double toGroundAngle(double theta); // Map angle to 0 -> 90 -> 0 -> -90 -> 0 (one revolution)
 	void calculateAngleOfAttack();

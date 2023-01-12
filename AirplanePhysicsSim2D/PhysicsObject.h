@@ -63,7 +63,7 @@ protected:
 	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi
 
 private:
-	double gravityConstant_ = 0.0003;
+	double gravityConstant_ = 0.0009;
 
 	Eigen::Vector2d localVelocity_;
 
@@ -71,7 +71,7 @@ private:
 
 	void updateWorldVelocity(); // Calculate and update world velocity, including angular velocity.
 
-	void applyGravity();
+	void applyGravity(double dt);
 
 };
 

@@ -34,7 +34,7 @@ int main()
 
     std::vector<sf::CircleShape> circles;
     for (int i = 0; i < 30; ++i) {
-        for (int j = -15; j < 5; ++j) {
+        for (int j = -5; j < 20; ++j) {
             sf::CircleShape circle;
             circle.setFillColor(sf::Color(100, 250, 50));
             circle.setRadius(20);
