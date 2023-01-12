@@ -30,7 +30,7 @@ private:
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.1;
-	double liftScale_ = 15;
+	double liftScale_ = 0;// 15;
 
 	double thrustPower_ = 50; // Applied thrust force from input
 	double pitchPower_ = 0.01; // Applied angular force from input
@@ -54,12 +54,11 @@ private:
 	bool isUpsideDown();
 
 	void calculateDrag();
-	void applyDrag();
-
 	void calculateAngularDrag();
-	void applyAngularDrag();
-
 	void calculateLift();
+
+	void applyDrag();
+	void applyAngularDrag();
 	void applyLift();
 
 };

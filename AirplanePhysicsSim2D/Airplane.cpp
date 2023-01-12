@@ -82,7 +82,7 @@ double Airplane::toGroundAngle(double theta)
 
 void Airplane::calculateAngleOfAttack()
 {
-	double aoa = toGroundAngle(angle_ - velocityAngle_);
+	double aoa = toGroundAngle( velocityAngle_);
 	angleOfAttack_ = aoa;
 }
 
@@ -120,9 +120,6 @@ void Airplane::calculateDrag()
 	double velXSquared = localVelocityX * localVelocityX;
 	double dragCoeff = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
 	drag_ = 0.5 * velXSquared * dragCoeff * dragScale_ * copysign(1.0, localVelocityX);
-
-	//std::cout << "Drag acc: " << drag_ << ", \t vel x: " << localVelocityX << std::endl; // Bugged.
-
 }
 
 void Airplane::applyDrag()

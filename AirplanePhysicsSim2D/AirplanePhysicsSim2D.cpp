@@ -28,7 +28,7 @@ int main()
     };
     
     Polygon planeShape = Polygon{ vertices };
-    Airplane planeObj = Airplane(planeShape, 1000, 1);
+    Airplane planeObj = Airplane(planeShape, 800, 1);
 
     sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
     playerView.zoom(8.0f);
