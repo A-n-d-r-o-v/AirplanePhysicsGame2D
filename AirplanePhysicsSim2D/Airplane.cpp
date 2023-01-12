@@ -82,7 +82,7 @@ double Airplane::toGroundAngle(double theta)
 
 void Airplane::calculateAngleOfAttack()
 {
-	double aoa = toGroundAngle( velocityAngle_);
+	double aoa = toGroundAngle(angle_ - velocityAngle_);
 	angleOfAttack_ = aoa;
 }
 
@@ -115,17 +115,21 @@ bool Airplane::isUpsideDown()
 
 void Airplane::calculateDrag()
 {
-	// TODO: should also look at local y velocity
-	double localVelocityX = localVelocity().x();
-	double velXSquared = localVelocityX * localVelocityX;
+	double localVelXSq = localVelocity().x() * localVelocity().x();
+	double localVelYSq = localVelocity().y() * localVelocity().y();
+	double localVelSq = localVelXSq + localVelYSq;
+
 	double dragCoeff = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
-	drag_ = 0.5 * velXSquared * dragCoeff * dragScale_ * copysign(1.0, localVelocityX);
+	drag_ = 0.5 * localVelSq * dragCoeff * dragScale_ * -localVelocity().normalized();
 }
 
 void Airplane::applyDrag()
 {
-	double dragAcceleration = drag_ / mass_; // a = F/m
-	addLocalVelocity(Eigen::Vector2d{ -dragAcceleration, 0 });
+	Eigen::Vector2d dragAcceleration = drag_ / mass_;
+	//double dragAcceleration = drag_ / mass_; // a = F/m
+	addLocalVelocity(dragAcceleration);
+
+	std::cout << "Drag acc x,y : (" << dragAcceleration.x() << ", " << dragAcceleration.y() << ") " << std::endl;
 }
 
 void Airplane::calculateLift()

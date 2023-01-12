@@ -24,13 +24,13 @@ private:
 	/* ---- PARAMS ---- */
 	double dragAOAMultiplier_ = 1.0; // AOA impact on drag
 	double dragAOABias_ = 0.1; // Drag AOA bias
-	double dragScale_ = 8; // Drag scale
+	double dragScale_ = 3; // Drag scale
 
 	double angularDragScale = 5000;
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.1;
-	double liftScale_ = 0;// 15;
+	double liftScale_ = 15;
 
 	double thrustPower_ = 50; // Applied thrust force from input
 	double pitchPower_ = 0.01; // Applied angular force from input
@@ -39,7 +39,7 @@ private:
 	double angleToGround_;
 	double angleOfAttack_;
 
-	double drag_;
+	Eigen::Vector2d drag_;
 	double angularDrag_;
 	double lift_;
 
