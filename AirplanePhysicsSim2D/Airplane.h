@@ -22,16 +22,16 @@ public:
 private:
 	// TODO: read these values from JSON.
 	/* ---- PARAMS ---- */
-	double dragAOAMultiplier_ = 3.0; // AOA impact on drag
+	double dragAOAMultiplier_ = 1.0; // AOA impact on drag
 	double dragAOABias_ = 0.1; // Drag AOA bias
-	double dragScale_ = 0.7; // Drag scale
+	double dragScale_ = 6; // Drag scale
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.1;
-	double liftScale_ = 10;
+	double liftScale_ = 15;
 
-	double thrustPower_ = 0.6; // Applied thrust force from input
-	double pitchPower_ = 0.0006; // Applied angular force from input
+	double thrustPower_ = 25; // Applied thrust force from input
+	double pitchPower_ = 0.006; // Applied angular force from input
 	/* ---------------- */
 
 	double angleToGround_;

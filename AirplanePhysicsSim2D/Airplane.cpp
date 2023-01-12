@@ -118,7 +118,7 @@ void Airplane::calculateDrag()
 	dragCoeff_ = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
 	drag_ = 0.5 * velXSquared * dragCoeff_ * dragScale_ * copysign(1.0, localVelocityX);
 
-	std::cout << "Drag acc: " << drag_ << ", \t vel x: " << localVelocityX << std::endl; // Bugged.
+	//std::cout << "Drag acc: " << drag_ << ", \t vel x: " << localVelocityX << std::endl; // Bugged.
 
 }
 

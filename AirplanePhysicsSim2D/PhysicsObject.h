@@ -63,7 +63,7 @@ protected:
 	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi
 
 private:
-	double gravityConstant_ = 0.0009;
+	double gravityConstant_ = 0.004;
 
 	Eigen::Vector2d localVelocity_;
 

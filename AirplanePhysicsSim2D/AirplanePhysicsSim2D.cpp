@@ -6,8 +6,9 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My airplane works!");
-    int cameraLookahead = 300;
+    sf::RenderWindow window(sf::VideoMode(1200, 900), "My airplane works!");
+    int cameraLookahead = 800;
+    int timeScale = 500;
 
     // (Load configuration with auto-scaling)
     std::vector<Eigen::Vector2d> vertices{
@@ -30,18 +31,23 @@ int main()
     Airplane planeObj = Airplane(planeShape, 1000, 1);
 
     sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
-    playerView.zoom(2.0f);
+    playerView.zoom(8.0f);
 
+    // TODO create world object with dynamic circles
     std::vector<sf::CircleShape> circles;
-    for (int i = 0; i < 30; ++i) {
-        for (int j = -5; j < 20; ++j) {
+    for (int i = 0; i < 40; ++i) {
+        for (int j = -5; j < 40; ++j) {
             sf::CircleShape circle;
             circle.setFillColor(sf::Color(100, 250, 50));
-            circle.setRadius(20);
-            circle.setPosition(i * 1000, j * 1000);
+            circle.setRadius(10);
+            circle.setPosition(i * 5000, j * 5000);
             circles.emplace_back(circle);
         }
     }
+
+    sf::Clock mainClock;
+    double dt = 1.0 / 60.0;
+    double accumulator = 0.0;
 
     while (window.isOpen())
     {
@@ -51,8 +57,22 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        playerView.setCenter((float) (planeObj.globalPosition().x() + cameraLookahead), (float) (planeObj.globalPosition().y()));
-        window.setView(playerView);
+        
+        double frameTime = mainClock.restart().asSeconds();
+        accumulator += frameTime;
+
+        while (accumulator >= dt) {
+            playerView.setCenter((float)(planeObj.globalPosition().x() + cameraLookahead), (float)(planeObj.globalPosition().y()));
+            window.setView(playerView);
+
+            planeObj.applyInput();
+
+            planeObj.update(dt* timeScale);
+
+            accumulator -= dt;
+
+        }
+
 
         // TODO: Create world with point indicators.
 
@@ -63,13 +83,6 @@ int main()
         for (const auto& circle : circles) {
             window.draw(circle);
         }
-        
-        planeObj.applyInput();
-        
-        planeObj.update(1.0);
-        //planeObj.globalTranslate(Eigen::Vector2d{ 0.02, 0.01 });
-        //planeObj.translateForward(0.02);
-        //planeObj.rotateAroundCOM(-0.00003);
 
         window.display();
     }
