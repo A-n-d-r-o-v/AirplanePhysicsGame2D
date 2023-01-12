@@ -6,12 +6,15 @@ void Airplane::update(double dt)
 	
 	angleToGround_ = toGroundAngle(angle_);
 	calculateAngleOfAttack();
-	double testAOA = sampleAOACurve(angleOfAttack_);
-	std::cout << testAOA << std::endl;
+
+	upsideDown_ = isUpsideDown();
 
 	// Apply drag
 	calculateDrag();
 	applyDrag();
+
+	calculateLift();
+	applyLift();
 }
 
 void Airplane::applyInput()
@@ -39,7 +42,7 @@ void Airplane::thrust(double forwardForce)
 {
 	Eigen::Vector2d thrustVec{ forwardForce / mass_, 0 };
 
-	localAcceleration_ = thrustVec;
+	localAcceleration_.x() = thrustVec.x();
 }
 
 // TODO implement angular drag
@@ -53,7 +56,7 @@ void Airplane::pitch(double angularForce)
 // TODO: AOA should calculate difference between angle (currently AOA) and velocity direction (from global velocity)
 double Airplane::toGroundAngle(double theta)
 {
-	double groundAngle = fmod(theta, 2*EIGEN_PI); // later: calculate if plane is upside-down like this (pi > angle > 3pi or something)
+	double groundAngle = wrapAngle(theta); // later: calculate if plane is upside-down like this (pi > angle > 3pi or something)
 	short sign = 1;
 
 	// Bottom half: invert sign
@@ -71,14 +74,7 @@ double Airplane::toGroundAngle(double theta)
 
 void Airplane::calculateAngleOfAttack()
 {
-	double planeDir = fmod(angle_, 2 * EIGEN_PI);
-	double velocityDir = atan2(-worldVelocity_.y(), worldVelocity_.x());
-	if (velocityDir < 0) { velocityDir += 2*EIGEN_PI; }
-	velocityDir = fmod(velocityDir, 2 * EIGEN_PI);
-	
-	double aoa = toGroundAngle(planeDir - velocityDir);
-	aoa = fmod(aoa, 2 * EIGEN_PI);
-
+	double aoa = toGroundAngle(angle_ - velocityAngle_);
 	angleOfAttack_ = aoa;
 }
 
@@ -104,19 +100,39 @@ double Airplane::sampleAOACurve(double angleOfAttack)
 	return value;
 }
 
+bool Airplane::isUpsideDown()
+{
+	return angle_ > EIGEN_PI / 2 && angle_ < 1.5 * EIGEN_PI;
+}
+
 void Airplane::calculateDrag()
 {
 	// TODO: should also look at local y velocity
-	double velXSquared = localVelocity_.x() * localVelocity_.x();
+	double localVelocityX = localVelocity().x();
+	double velXSquared = localVelocityX * localVelocityX;
 	dragCoeff_ = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
-	drag_ = 0.5 * velXSquared * dragCoeff_ * dragScale_ * copysign(1.0, localVelocity_.x());
+	drag_ = 0.5 * velXSquared * dragCoeff_ * dragScale_ * copysign(1.0, localVelocityX);
 
-	//std::cout << "Drag acc: " << drag_ << ", vel x: " << localVelocity_.x() << std::endl;
+	std::cout << "Drag acc: " << drag_ << ", \t vel x: " << localVelocityX << std::endl; // Bugged.
 
 }
 
 void Airplane::applyDrag()
 {
 	double dragAcceleration = drag_ / mass_; // a = F/m
-	localVelocity_.x() -= dragAcceleration;
+	addLocalVelocity(Eigen::Vector2d{ -dragAcceleration, 0 });
+}
+
+void Airplane::calculateLift()
+{
+	double localVelocityX = localVelocity().x();
+	double velXSquared = localVelocityX * localVelocityX;
+	liftCoeff_ = liftAOAMultiplier_ * (sampleAOACurve(angleOfAttack_) + liftAOABias_);
+	lift_ = 0.5 * velXSquared * liftCoeff_ * liftScale_ * copysign(1.0, localVelocityX);
+}
+
+void Airplane::applyLift()
+{
+	double liftAcceleration = lift_ / mass_; // a = F/m
+	addLocalVelocity(Eigen::Vector2d{ 0, -liftAcceleration });
 }
