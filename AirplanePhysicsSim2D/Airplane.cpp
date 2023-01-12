@@ -7,10 +7,8 @@ void Airplane::update(double dt)
 	calculateState();
 
 	// Apply drag
-	calculateDrag();
 	applyDrag();
-
-	calculateLift();
+	applyAngularDrag();
 	applyLift();
 }
 
@@ -56,6 +54,11 @@ void Airplane::calculateState()
 	calculateAngleOfAttack();
 
 	upsideDown_ = isUpsideDown();
+
+	calculateDrag();
+	calculateAngularDrag();
+	calculateLift();
+
 }
 
 // TODO: AOA should calculate difference between angle (currently AOA) and velocity direction (from global velocity)
@@ -115,8 +118,8 @@ void Airplane::calculateDrag()
 	// TODO: should also look at local y velocity
 	double localVelocityX = localVelocity().x();
 	double velXSquared = localVelocityX * localVelocityX;
-	dragCoeff_ = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
-	drag_ = 0.5 * velXSquared * dragCoeff_ * dragScale_ * copysign(1.0, localVelocityX);
+	double dragCoeff = dragAOAMultiplier_ * (abs(angleOfAttack_) + dragAOABias_);
+	drag_ = 0.5 * velXSquared * dragCoeff * dragScale_ * copysign(1.0, localVelocityX);
 
 	//std::cout << "Drag acc: " << drag_ << ", \t vel x: " << localVelocityX << std::endl; // Bugged.
 
@@ -132,12 +135,24 @@ void Airplane::calculateLift()
 {
 	double localVelocityX = localVelocity().x();
 	double velXSquared = localVelocityX * localVelocityX;
-	liftCoeff_ = liftAOAMultiplier_ * (sampleAOACurve(angleOfAttack_) + liftAOABias_);
-	lift_ = 0.5 * velXSquared * liftCoeff_ * liftScale_ * copysign(1.0, localVelocityX);
+	double liftCoeff = liftAOAMultiplier_ * (sampleAOACurve(angleOfAttack_) + liftAOABias_);
+	lift_ = 0.5 * velXSquared * liftCoeff * liftScale_ * copysign(1.0, localVelocityX);
 }
 
 void Airplane::applyLift()
 {
 	double liftAcceleration = lift_ / mass_; // a = F/m
 	addLocalVelocity(Eigen::Vector2d{ 0, -liftAcceleration });
+}
+
+void Airplane::calculateAngularDrag()
+{
+	double angularVelocitySquared = worldAngularVelocity_ * worldAngularVelocity_;
+	angularDrag_ = angularVelocitySquared * angularDragScale * copysign(1.0, worldAngularVelocity_);
+}
+
+void Airplane::applyAngularDrag()
+{
+	double dragAcceleration = angularDrag_ / mass_;
+	worldAngularVelocity_ -= dragAcceleration;
 }

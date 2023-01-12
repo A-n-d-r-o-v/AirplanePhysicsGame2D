@@ -35,7 +35,7 @@ int main()
 
     // TODO create world object with dynamic circles
     std::vector<sf::CircleShape> circles;
-    for (int i = 0; i < 40; ++i) {
+    for (int i = 0; i < 60; ++i) {
         for (int j = -5; j < 40; ++j) {
             sf::CircleShape circle;
             circle.setFillColor(sf::Color(100, 250, 50));

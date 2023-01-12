@@ -24,23 +24,23 @@ private:
 	/* ---- PARAMS ---- */
 	double dragAOAMultiplier_ = 1.0; // AOA impact on drag
 	double dragAOABias_ = 0.1; // Drag AOA bias
-	double dragScale_ = 6; // Drag scale
+	double dragScale_ = 8; // Drag scale
+
+	double angularDragScale = 5000;
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.1;
 	double liftScale_ = 15;
 
-	double thrustPower_ = 25; // Applied thrust force from input
-	double pitchPower_ = 0.006; // Applied angular force from input
+	double thrustPower_ = 50; // Applied thrust force from input
+	double pitchPower_ = 0.01; // Applied angular force from input
 	/* ---------------- */
 
 	double angleToGround_;
 	double angleOfAttack_;
 
-	double dragCoeff_;
 	double drag_;
-
-	double liftCoeff_;
+	double angularDrag_;
 	double lift_;
 
 	bool upsideDown_;
@@ -55,6 +55,9 @@ private:
 
 	void calculateDrag();
 	void applyDrag();
+
+	void calculateAngularDrag();
+	void applyAngularDrag();
 
 	void calculateLift();
 	void applyLift();
