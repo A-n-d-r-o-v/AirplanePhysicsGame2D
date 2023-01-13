@@ -17,8 +17,6 @@ public:
 
 	void pitch(double angularForce);
 
-	void calculateGForce(double dt); // Local acceleration
-
 private:
 	// TODO: read these values from JSON.
 	/* ---- PARAMS ---- */

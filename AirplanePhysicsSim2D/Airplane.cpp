@@ -21,7 +21,7 @@ void Airplane::applyInput()
 	else {
 		thrust(0);
 	}
-	// Pitch up
+	// Pitch
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		pitch(pitchPower_);
 	}
@@ -126,10 +126,7 @@ void Airplane::calculateDrag()
 void Airplane::applyDrag()
 {
 	Eigen::Vector2d dragAcceleration = drag_ / mass_;
-	//double dragAcceleration = drag_ / mass_; // a = F/m
 	addLocalVelocity(dragAcceleration);
-
-	//std::cout << "Drag acc x,y : (" << dragAcceleration.x() << ", " << dragAcceleration.y() << ") " << std::endl;
 }
 
 void Airplane::calculateLift()
