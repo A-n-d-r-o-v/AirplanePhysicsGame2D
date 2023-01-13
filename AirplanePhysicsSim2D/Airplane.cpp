@@ -129,21 +129,26 @@ void Airplane::applyDrag()
 	//double dragAcceleration = drag_ / mass_; // a = F/m
 	addLocalVelocity(dragAcceleration);
 
-	std::cout << "Drag acc x,y : (" << dragAcceleration.x() << ", " << dragAcceleration.y() << ") " << std::endl;
+	//std::cout << "Drag acc x,y : (" << dragAcceleration.x() << ", " << dragAcceleration.y() << ") " << std::endl;
 }
 
 void Airplane::calculateLift()
 {
-	double localVelocityX = localVelocity().x();
-	double velXSquared = localVelocityX * localVelocityX;
+	double localVelXSq = localVelocity().x() * localVelocity().x();
+	double localVelYSq = localVelocity().y() * localVelocity().y();
+	double localVelSq = localVelXSq + localVelYSq;
+
 	double liftCoeff = liftAOAMultiplier_ * (sampleAOACurve(angleOfAttack_) + liftAOABias_);
-	lift_ = 0.5 * velXSquared * liftCoeff * liftScale_ * copysign(1.0, localVelocityX);
+	
+	Eigen::Vector2d velocityNormalized = localVelocity().normalized();
+	Eigen::Vector2d direction = Eigen::Vector2d{ velocityNormalized.y(), -velocityNormalized.x() };
+	lift_ = 0.5 * localVelSq * liftCoeff * liftScale_ * direction;
 }
 
 void Airplane::applyLift()
 {
-	double liftAcceleration = lift_ / mass_; // a = F/m
-	addLocalVelocity(Eigen::Vector2d{ 0, -liftAcceleration });
+	Eigen::Vector2d liftAcceleration = lift_ / mass_; // a = F/m
+	worldVelocity_ += toWorldSpace(liftAcceleration, velocityAngle_);
 }
 
 void Airplane::calculateAngularDrag()

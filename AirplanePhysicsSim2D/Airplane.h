@@ -30,7 +30,7 @@ private:
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.3;
-	double liftScale_ = 6;
+	double liftScale_ = 3;
 
 	double thrustPower_ = 70; // Applied thrust force from input
 	double pitchPower_ = 0.038; // Applied angular force from input
@@ -41,7 +41,7 @@ private:
 
 	Eigen::Vector2d drag_;
 	double angularDrag_;
-	double lift_;
+	Eigen::Vector2d lift_;
 
 	bool upsideDown_;
 
