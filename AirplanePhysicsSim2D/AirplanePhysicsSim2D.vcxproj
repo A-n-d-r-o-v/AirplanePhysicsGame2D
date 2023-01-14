@@ -106,6 +106,9 @@
       <AdditionalIncludeDirectories>D:\sfml\SFML-2.5.1\include;D:\Eigen\Eigen</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +128,9 @@
       <AdditionalIncludeDirectories>D:\sfml\SFML-2.5.1\include;D:\Eigen\Eigen</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <Optimization>Disabled</Optimization>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
