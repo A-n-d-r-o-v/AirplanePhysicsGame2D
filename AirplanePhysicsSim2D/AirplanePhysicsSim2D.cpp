@@ -30,14 +30,6 @@ int main()
     Polygon planeShape = Polygon{ vertices };
     Airplane planeObj = Airplane(planeShape, 1100, 1);
 
-    std::vector<Airplane> otherPlanes;
-    for (int i = 0; i < 18; ++i) {
-        Airplane otherPlane = Airplane(planeShape, 1200, 1);
-        otherPlane.rotateAroundCOM(-EIGEN_PI / (0.3*i));
-        otherPlane.thrust(5 * i);
-        otherPlanes.emplace_back(otherPlane);
-    }
-
     sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
     playerView.zoom(8.0f);
 
@@ -77,11 +69,6 @@ int main()
 
             planeObj.update(dt* timeScale);
 
-            for (auto& otherPlane : otherPlanes) {
-                otherPlane.update(dt * timeScale);
-                otherPlane.rotateAroundCOM(EIGEN_PI / 900);
-            }
-
             accumulator -= dt;
 
         }
@@ -94,9 +81,6 @@ int main()
 
         window.draw(planeObj.shape());
 
-        for (auto& otherPlane : otherPlanes) {
-            window.draw(otherPlane.shape());
-        }
         for (const auto& circle : circles) {
             window.draw(circle);
         }
