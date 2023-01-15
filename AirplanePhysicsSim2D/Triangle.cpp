@@ -78,4 +78,7 @@ const std::vector<Eigen::Vector2d>& Triangle::getVertices() const
 	return vertices_;
 }
 
+bool Triangle::isVisible() const {
+	return isVisible_;
+}
 

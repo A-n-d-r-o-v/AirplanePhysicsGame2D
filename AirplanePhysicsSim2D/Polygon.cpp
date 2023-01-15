@@ -36,7 +36,9 @@ void Polygon::rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint)
 void Polygon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (const auto& triangle : triangles_) {
-		target.draw(triangle.toConvexShape(), states);
+		if (triangle.isVisible()) {
+			target.draw(triangle.toConvexShape(), states);
+		}
 	}
 	//for (auto& circle : cornerCircles()) {
 	//	target.draw(circle, states);

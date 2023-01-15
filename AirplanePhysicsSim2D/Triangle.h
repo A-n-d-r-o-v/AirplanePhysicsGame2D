@@ -27,8 +27,11 @@ struct Triangle
 	// Getters
 	std::vector<Eigen::Vector2d>& getVertices();
 	const std::vector<Eigen::Vector2d>& getVertices() const;
+	bool isVisible() const;
 
 private:
 	std::vector<Eigen::Vector2d> vertices_;
+
+	bool isVisible_ = true;
 };
 
