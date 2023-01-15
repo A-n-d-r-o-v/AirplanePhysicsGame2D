@@ -150,6 +150,7 @@
     <ClCompile Include="TerrainGenerator.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="TunnelSegment.cpp" />
+    <ClCompile Include="Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Airplane.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="TerrainGenerator.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="TunnelSegment.h" />
+    <ClInclude Include="Universe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -61,14 +61,25 @@ Eigen::Vector2d Triangle::center() const{
 }
 
 void Triangle::findMinMaxVertices() {
+
 	auto [x_min, x_max] = std::minmax_element(vertices_.begin(), vertices_.end(), [](const auto& a, const auto& b) { return a.x() < b.x(); });
 	auto [y_min, y_max] = std::minmax_element(vertices_.begin(), vertices_.end(), [](const auto& a, const auto& b) { return a.y() < b.y(); });
 
-	minXVertex_ = &(*x_min);
-	maxXVertex_ = &(*x_max);
+	minXVertex_ = std::make_shared<Eigen::Vector2d>(*x_min);
+	maxXVertex_ = std::make_shared<Eigen::Vector2d>(*x_max);
 
-	minYVertex_ = &(*y_min);
-	maxYVertex_ = &(*y_max);
+	minYVertex_ = std::make_shared<Eigen::Vector2d>(*y_min);
+	maxYVertex_ = std::make_shared<Eigen::Vector2d>(*y_max);
+}
+
+bool Triangle::inView(int leftBound, int rightBound, int upperBound, int lowerBound) {
+		
+	return !(
+		minXVertex_->x() > rightBound || 
+		maxXVertex_->x() < leftBound ||
+		minYVertex_->y() > lowerBound ||
+		maxYVertex_->y() < upperBound
+	);
 }
 
 void Triangle::operator+=(Eigen::Vector2d vec)
@@ -86,6 +97,18 @@ std::array<Eigen::Vector2d, 3>& Triangle::getVertices()
 const std::array<Eigen::Vector2d, 3>& Triangle::getVertices() const
 {
 	return vertices_;
+}
+
+void Triangle::setEnableCulling(bool enableCulling) {
+	enableCulling_ = enableCulling;
+}
+
+bool Triangle::enableCulling() const {
+	return enableCulling_;
+}
+
+void Triangle::setVisibility(bool visible) {
+	isVisible_ = visible;
 }
 
 bool Triangle::isVisible() const {

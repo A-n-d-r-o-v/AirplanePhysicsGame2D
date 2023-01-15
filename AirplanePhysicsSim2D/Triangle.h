@@ -24,22 +24,30 @@ struct Triangle
 
 	void findMinMaxVertices();
 
+	bool inView(int leftBound, int rightBound, int upperBound, int lowerBound);
+
 	void operator += (Eigen::Vector2d vec);
 
 	// Getters
 	std::array<Eigen::Vector2d, 3>& getVertices();
 	const std::array<Eigen::Vector2d, 3>& getVertices() const;
+
+	void setEnableCulling(bool enableCulling);
+	bool enableCulling() const;
+
+	void setVisibility(bool visible);
 	bool isVisible() const;
 
 private:
 	std::array<Eigen::Vector2d, 3> vertices_;
 
-	Eigen::Vector2d* minXVertex_;
-	Eigen::Vector2d* minYVertex_;
+	std::shared_ptr<Eigen::Vector2d> minXVertex_;
+	std::shared_ptr<Eigen::Vector2d> minYVertex_;
 
-	Eigen::Vector2d* maxXVertex_;
-	Eigen::Vector2d* maxYVertex_;
+	std::shared_ptr<Eigen::Vector2d> maxXVertex_;
+	std::shared_ptr<Eigen::Vector2d> maxYVertex_;
 
 	bool isVisible_ = true;
+	bool enableCulling_ = true;
 };
 

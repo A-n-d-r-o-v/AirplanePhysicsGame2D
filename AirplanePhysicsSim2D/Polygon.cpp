@@ -1,22 +1,18 @@
 #include "polygon.h"
 
-Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices) : vertices_(vertices) {
-	triangles_ = triangulate();
+Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices, bool enableCulling) 
+	: vertices_(vertices) {
+	triangles_ = triangulate(enableCulling);
 }
 
-Polygon::Polygon(std::vector<Eigen::Vector2d>& vertices, double scale)
+Polygon::Polygon(std::vector<Eigen::Vector2d>& vertices, double scale, bool enableCulling)
 {
 	std::transform(vertices.begin(), vertices.end(), vertices.begin(),
 		[scale](const Eigen::Vector2d& v) { return Eigen::Vector2d{ v[0] * scale, v[1] * scale }; });
 
 	vertices_ = vertices;
 
-	//for (Eigen::Vector2d & element : vertices) {
-	//	element.x() *= scale;
-	//	element.y() *= scale;
-	//}
-
-	triangles_ = triangulate();
+	triangles_ = triangulate(enableCulling);
 }
 
 void Polygon::rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint)
@@ -25,7 +21,7 @@ void Polygon::rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint)
 	Eigen::Matrix2d rotMat = t.toRotationMatrix();
 
 	for (auto& triangle : triangles_) {
-		for (auto& v : triangle.getVertices()) {
+		for (auto& v : triangle->getVertices()) {
 			v -= pivotPoint;
 			v = rotMat * v;
 			v += pivotPoint;
@@ -36,8 +32,8 @@ void Polygon::rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint)
 void Polygon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (const auto& triangle : triangles_) {
-		if (triangle.isVisible()) {
-			target.draw(triangle.toConvexShape(), states);
+		if (triangle->isVisible() || !triangle->enableCulling()) {
+			target.draw(triangle->toConvexShape(), states);
 		}
 	}
 	//for (auto& circle : cornerCircles()) {
@@ -49,7 +45,7 @@ std::vector<Eigen::Vector2d> Polygon::vertices() const {
 	return vertices_;
 }
 
-std::vector<Triangle>& Polygon::triangles()
+std::vector<std::shared_ptr<Triangle>> Polygon::triangles()
 {
 	return triangles_;
 }
@@ -66,7 +62,7 @@ const std::vector<sf::CircleShape> Polygon::cornerCircles() const {
 	circleVec.reserve(vertices_.size());
 
 	for (const auto& triangle : triangles_) {
-		for (const auto& vertex : triangle.getVertices()) {
+		for (const auto& vertex : triangle->getVertices()) {
 			sf::CircleShape vertexCircle;
 			vertexCircle.setRadius(3);
 			vertexCircle.setOrigin(vertexCircle.getRadius(), vertexCircle.getRadius());
@@ -79,11 +75,11 @@ const std::vector<sf::CircleShape> Polygon::cornerCircles() const {
 	return circleVec;
 }
 
-std::vector<Triangle> Polygon::triangulate()
+std::vector<std::shared_ptr<Triangle>> Polygon::triangulate(bool enableCulling)
 {
 	std::vector<Eigen::Vector2d> vertices = vertices_;
 
-	std::vector<Triangle> triangles;
+	std::vector<std::shared_ptr<Triangle>> triangles;
 	triangleCount_ = std::size(vertices) - 2;
 	triangles.reserve(triangleCount_);
 
@@ -117,7 +113,8 @@ std::vector<Triangle> Polygon::triangulate()
 			}
 			if (isEar) {
 				Triangle t = Triangle(prevVec, currVec, nextVec);
-				triangles.emplace_back(t);
+				t.setEnableCulling(enableCulling);
+				triangles.emplace_back(std::make_shared<Triangle>(t));
 
 				vertices.erase(vertices.begin() + i); // Remove vertex at index i
 				vertexCount--;
@@ -127,7 +124,8 @@ std::vector<Triangle> Polygon::triangulate()
 	}
 
 	Triangle t = Triangle(vertices[0], vertices[1], vertices[2]); // emplace last triangle
-	triangles.emplace_back(t);
+	t.setEnableCulling(enableCulling);
+	triangles.emplace_back(std::make_shared<Triangle>(t));
 
 	return triangles;
 }

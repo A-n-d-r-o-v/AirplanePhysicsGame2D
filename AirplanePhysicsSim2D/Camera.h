@@ -11,11 +11,18 @@ public:
 
 	void updateView();
 
+	std::pair<int, int> renderBoundX() const;
+	std::pair<int, int> renderBoundY() const;
+
 private:
 	sf::View view_;
 	sf::RenderWindow& window_;
 
 	const PhysicsObject& objectToFollow_;
+
+	const int renderBoundMargin_ = 100;
+	std::pair<int, int> renderBoundX_; // Min max x bound
+	std::pair<int, int> renderBoundY_; // Min max y bound
 
 	/* Params. TODO: retrieve from JSON config file */
 
@@ -34,6 +41,8 @@ private:
 	/* ---------- */
 
 	Eigen::Vector2d lookAheadVec();
+
+	void calculateRenderBounds();
 
 	void calculateZoomLevel();
 

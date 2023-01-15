@@ -18,7 +18,7 @@ void PhysicsObject::calculateLocalCOM()
 {
 	localCenterOfMass_ = Eigen::Vector2d{0, 0};
 	for (const auto& triangle : shape_.triangles()) {
-		localCenterOfMass_ += (triangle.center() - globalPosition_);
+		localCenterOfMass_ += (triangle->center() - globalPosition_);
 	}
 	localCenterOfMass_ /= shape_.triangleCount();
 }
@@ -27,7 +27,7 @@ void PhysicsObject::globalTranslate(const Eigen::Vector2d& delta)
 {
 	globalPosition_ += delta;
 	for (auto& triangle : shape_.triangles()) {
-		triangle += delta;
+		*triangle += delta;
 	}
 }
 

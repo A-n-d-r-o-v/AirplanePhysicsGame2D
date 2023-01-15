@@ -5,11 +5,11 @@
 #include "airplane.h"
 #include "TerrainGenerator.h"
 #include "Camera.h"
+#include "Universe.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1200, 900), "My airplane works!");
-    int cameraLookahead = 300;
+    sf::RenderWindow window(sf::VideoMode(1200, 900), "My airplane sounds like this: \"wreeuuummmm!!\"");
     int timeScale = 500;
 
     // (Load configuration with auto-scaling)
@@ -29,13 +29,15 @@ int main()
         Eigen::Vector2d(0.0, 50.0)
     };
     
-    Polygon planeShape = Polygon{ vertices, 0.2 };
+    Polygon planeShape = Polygon{ vertices, 0.2, false };
     Airplane planeObj = Airplane(planeShape, 6000, 1);
 
     TerrainGenerator terrainGenerator(TerrainType::Mountains);
-    terrainGenerator.generateMountainSegment(-3000, 50000, false);
+    terrainGenerator.generateMountainSegment(0, 5000, false);
 
     Camera camera(window, planeObj);
+
+    Universe universe{ terrainGenerator, camera, planeObj };
     
     //sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
 
@@ -54,7 +56,7 @@ int main()
     }
 
     sf::Clock mainClock;
-    double dt = 1.0 / 60.0;
+    const double dt = 1.0 / 60.0;
     double accumulator = 0.0;
 
     while (window.isOpen())
@@ -70,14 +72,7 @@ int main()
         accumulator += frameTime;
 
         while (accumulator >= dt) {
-            //playerView.setCenter((float)(planeObj.globalPosition().x() + cameraLookahead), (float)(planeObj.globalPosition().y()));
-            //window.setView(playerView);
-
-            planeObj.applyInput();
-
-            planeObj.update(dt* timeScale);
-
-            camera.updateView();
+            universe.updatePhysics(dt);
 
             accumulator -= dt;
 
@@ -85,15 +80,10 @@ int main()
         //std::cout << planeObj.globalPosition().x() << ", " << planeObj.globalPosition().y() << std::endl;
         std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
 
-        // TODO: Create world with point indicators.
-
         window.clear();
 
-        window.draw(planeObj.shape());
+        universe.renderStep(window);
 
-        for (const auto& polygon : terrainGenerator.polygons()) {
-            window.draw(polygon);
-        }
         for (const auto& circle : circles) {
             window.draw(circle);
         }
