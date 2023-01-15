@@ -43,7 +43,7 @@ std::vector<Eigen::Vector2d> TunnelSegment::generateInnerCurve()
 {
 	std::vector<Eigen::Vector2d> points;
 
-
+	// Sample points from bezier curve (0 -> 1)
 
 	return points;
 }

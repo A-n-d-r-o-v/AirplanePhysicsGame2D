@@ -7,9 +7,18 @@ TerrainGenerator::TerrainGenerator(const TerrainType terrainType)
 }
 
 void TerrainGenerator::generateMountainSegment(int startPoint, int endPoint, int hasTunnel)
-{
-	std::cout << "Generating mountain segment..." << std::endl;
-	polygons_.emplace_back(solidMountainSegment(startPoint, endPoint));
+{	
+	if (hasTunnel) {
+		// Create tunnel
+		// Calculate end point angles
+		// Pass end point angles to tunnel
+		// Generate tunnel curve
+		// Create segment from tunnel
+	}
+	else {
+		std::cout << "Generating mountain segment..." << std::endl;
+		polygons_.emplace_back(solidMountainSegment(startPoint, endPoint));
+	}
 }
 
 double TerrainGenerator::terrainNoise(int x)

@@ -26,6 +26,8 @@ private:
 	Bezier::Bezier<3> cubicBezier_;
 	std::vector<Eigen::Vector2d> shapePoints_; // TODO: outer shape: scale bezier?
 
+	const int supportPointLength = 200;
+
 	double startThickness_ = 50, endThickness_ = 50;
 	bool isInner_;
 
