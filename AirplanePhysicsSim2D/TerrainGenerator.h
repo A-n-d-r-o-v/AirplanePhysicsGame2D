@@ -36,7 +36,7 @@ private:
 
 	const int bottomLevel = 30000; // Height of map bottom
 
-	int spacing_ = 40; // Pixels per vertex in the local x direction
+	int spacing_ = 20; // Pixels per vertex in the local x direction
 
 	const double amplitude_ = 13000.0;
 	const double frequency_ = 0.00005;

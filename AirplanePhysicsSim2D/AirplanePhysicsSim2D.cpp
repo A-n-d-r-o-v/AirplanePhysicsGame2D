@@ -28,8 +28,8 @@ int main()
         Eigen::Vector2d(0.0, 50.0)
     };
     
-    Polygon planeShape = Polygon{ vertices, 0.1 };
-    Airplane planeObj = Airplane(planeShape, 4100, 1);
+    Polygon planeShape = Polygon{ vertices, 0.2 };
+    Airplane planeObj = Airplane(planeShape, 6000, 1);
 
     TerrainGenerator terrainGenerator(TerrainType::Mountains);
     terrainGenerator.generateMountainSegment(-3000, 50000, false);

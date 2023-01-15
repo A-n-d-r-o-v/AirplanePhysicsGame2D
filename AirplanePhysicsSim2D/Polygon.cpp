@@ -38,9 +38,9 @@ void Polygon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for (const auto& triangle : triangles_) {
 		target.draw(triangle.toConvexShape(), states);
 	}
-	for (auto& circle : cornerCircles()) {
-		target.draw(circle, states);
-	}
+	//for (auto& circle : cornerCircles()) {
+	//	target.draw(circle, states);
+	//}
 }
 
 std::vector<Eigen::Vector2d> Polygon::vertices() const {

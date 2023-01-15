@@ -144,7 +144,6 @@
   <ItemGroup>
     <ClCompile Include="Airplane.cpp" />
     <ClCompile Include="AirplanePhysicsSim2D.cpp" />
-    <ClCompile Include="MountainSegment.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="TerrainGenerator.cpp" />
@@ -154,7 +153,6 @@
   <ItemGroup>
     <ClInclude Include="Airplane.h" />
     <ClInclude Include="Bezier.h" />
-    <ClInclude Include="MountainSegment.h" />
     <ClInclude Include="PerlinNoise.hpp" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Polygon.h" />

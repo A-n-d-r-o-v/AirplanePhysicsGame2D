@@ -33,9 +33,6 @@
     <ClCompile Include="TerrainGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MountainSegment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TunnelSegment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,9 +57,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Bezier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MountainSegment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TunnelSegment.h">
