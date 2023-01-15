@@ -4,6 +4,7 @@
 #include "physicsobject.h"
 #include "airplane.h"
 #include "TerrainGenerator.h"
+#include "Camera.h"
 
 int main()
 {
@@ -34,8 +35,11 @@ int main()
     TerrainGenerator terrainGenerator(TerrainType::Mountains);
     terrainGenerator.generateMountainSegment(-3000, 50000, false);
 
-    sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
-    playerView.zoom(2.0f);
+    Camera camera(window, planeObj);
+    
+    //sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
+
+    //playerView.zoom(2.0f);
 
     // TODO create world object with dynamic circles
     std::vector<sf::CircleShape> circles;
@@ -66,18 +70,20 @@ int main()
         accumulator += frameTime;
 
         while (accumulator >= dt) {
-            playerView.setCenter((float)(planeObj.globalPosition().x() + cameraLookahead), (float)(planeObj.globalPosition().y()));
-            window.setView(playerView);
+            //playerView.setCenter((float)(planeObj.globalPosition().x() + cameraLookahead), (float)(planeObj.globalPosition().y()));
+            //window.setView(playerView);
 
             planeObj.applyInput();
 
             planeObj.update(dt* timeScale);
 
+            camera.updateView();
+
             accumulator -= dt;
 
         }
-        std::cout << planeObj.globalPosition().x() << ", " << planeObj.globalPosition().y() << std::endl;
-        //std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
+        //std::cout << planeObj.globalPosition().x() << ", " << planeObj.globalPosition().y() << std::endl;
+        std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
 
         // TODO: Create world with point indicators.
 

@@ -23,9 +23,9 @@ public:
 
 	//void applyForce(const Eigen::Vector2d& force); // Apply force, move and rotate accordingly
 
-	const Eigen::Vector2d toWorldSpace(const Eigen::Vector2d& coordinate, double theta);
+	static const Eigen::Vector2d toWorldSpace(const Eigen::Vector2d& coordinate, double theta);
 
-	const Eigen::Vector2d toLocalSpace(const Eigen::Vector2d& coordinate, double theta);
+	static const Eigen::Vector2d toLocalSpace(const Eigen::Vector2d& coordinate, double theta);
 
 	virtual void update(double dt);
 
@@ -35,7 +35,21 @@ public:
 
 	Eigen::Vector2d localVelocity() const;
 
-	void rotateAroundCOM(double theta); // TODO: Public for testing purposes, should be private
+	Eigen::Vector2d worldVelocity() const;
+
+	double angle() const;
+
+	double angularVelocity() const;
+
+	double velocityNorm() const;
+
+	double maxVelocityNorm() const;
+
+	void rotateAroundCOM(double theta);
+
+	static double angle(Eigen::Vector2d vec); // TODO: Move to util class
+
+	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi . TODO: Move to util class
 
 protected:
 	double mass_;
@@ -51,16 +65,15 @@ protected:
 
 	Eigen::Vector2d localAcceleration_;
 
-	double worldAngularVelocity_;
-	double worldAngularAcceleration_;
+	double angularVelocity_;
+	double angularAcceleration_;
+
+	double velocityNorm_ = 0;		// Velocity magnitude
+	double maxVelocityNorm_ = 0;	// Highest velocity magnitude
 
 	double velocityAngle_;
 
 	// ------------------
-
-	static double angle(Eigen::Vector2d vec);
-
-	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi
 
 private:
 	double gravityConstant_ = 9.82;
@@ -72,6 +85,8 @@ private:
 	void updateWorldVelocity(); // Calculate and update world velocity, including angular velocity.
 
 	void applyGravity(double dt);
+
+	void updateVelocityNorm();
 
 };
 

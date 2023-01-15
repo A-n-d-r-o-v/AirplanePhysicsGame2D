@@ -45,7 +45,7 @@ void Airplane::pitch(double angularForce)
 {
 	double angularAcceleration = angularForce / mass_;
 
-	worldAngularAcceleration_ = angularAcceleration;
+	angularAcceleration_ = angularAcceleration;
 }
 
 void Airplane::calculateState()
@@ -150,12 +150,12 @@ void Airplane::applyLift()
 
 void Airplane::calculateAngularDrag()
 {
-	double angularVelocitySquared = worldAngularVelocity_ * worldAngularVelocity_;
-	angularDrag_ = angularVelocitySquared * angularDragScale * copysign(1.0, worldAngularVelocity_);
+	double angularVelocitySquared = angularVelocity_ * angularVelocity_;
+	angularDrag_ = angularVelocitySquared * angularDragScale * copysign(1.0, angularVelocity_);
 }
 
 void Airplane::applyAngularDrag()
 {
 	double dragAcceleration = angularDrag_ / mass_;
-	worldAngularVelocity_ -= dragAcceleration;
+	angularVelocity_ -= dragAcceleration;
 }

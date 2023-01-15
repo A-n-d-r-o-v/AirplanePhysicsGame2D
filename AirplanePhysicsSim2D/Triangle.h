@@ -22,15 +22,23 @@ struct Triangle
 
 	Eigen::Vector2d center() const;
 
+	void findMinMaxVertices();
+
 	void operator += (Eigen::Vector2d vec);
 
 	// Getters
-	std::vector<Eigen::Vector2d>& getVertices();
-	const std::vector<Eigen::Vector2d>& getVertices() const;
+	std::array<Eigen::Vector2d, 3>& getVertices();
+	const std::array<Eigen::Vector2d, 3>& getVertices() const;
 	bool isVisible() const;
 
 private:
-	std::vector<Eigen::Vector2d> vertices_;
+	std::array<Eigen::Vector2d, 3> vertices_;
+
+	Eigen::Vector2d* minXVertex_;
+	Eigen::Vector2d* minYVertex_;
+
+	Eigen::Vector2d* maxXVertex_;
+	Eigen::Vector2d* maxYVertex_;
 
 	bool isVisible_ = true;
 };

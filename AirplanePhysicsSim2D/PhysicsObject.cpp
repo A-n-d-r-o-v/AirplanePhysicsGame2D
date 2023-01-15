@@ -10,6 +10,8 @@ PhysicsObject::PhysicsObject(Polygon& shape, double mass, double gravityScale=1.
 {
 	calculateLocalCOM();
 	std::cout << localCenterOfMass_.x() << ", " << localCenterOfMass_.y() << std::endl;
+
+	updateVelocityNorm();
 }
 
 void PhysicsObject::calculateLocalCOM()
@@ -67,10 +69,12 @@ void PhysicsObject::update(double dt)
 	updateLocalVelocity();
 	updateWorldVelocity();
 
+	updateVelocityNorm();
+
 	//std::cout << "World velocity: " << worldVelocity_.x() << ", " << worldVelocity_.y() << std::endl;
 
 	globalTranslate(worldVelocity_ * dt);
-	rotateAroundCOM(worldAngularVelocity_ * dt);
+	rotateAroundCOM(angularVelocity_ * dt);
 	applyGravity(dt);
 }
 
@@ -84,7 +88,7 @@ void PhysicsObject::updateWorldVelocity()
 	worldAcceleration_ = toWorldSpace(localAcceleration_, angle_);
 
 	worldVelocity_ += worldAcceleration_;
-	worldAngularVelocity_ += worldAngularAcceleration_;
+	angularVelocity_ += angularAcceleration_;
 }
 
 Polygon PhysicsObject::shape() const
@@ -100,6 +104,31 @@ Eigen::Vector2d PhysicsObject::globalPosition() const
 Eigen::Vector2d PhysicsObject::localVelocity() const
 {
 	return localVelocity_;
+}
+
+Eigen::Vector2d PhysicsObject::worldVelocity() const
+{
+	return worldVelocity_;
+}
+
+double PhysicsObject::angle() const
+{
+	return angle_;
+}
+
+double PhysicsObject::angularVelocity() const
+{
+	return angularVelocity_;
+}
+
+double PhysicsObject::velocityNorm() const
+{
+	return velocityNorm_;
+}
+
+double PhysicsObject::maxVelocityNorm() const
+{
+	return maxVelocityNorm_;
 }
 
 void PhysicsObject::rotateAroundCOM(double theta)
@@ -123,4 +152,10 @@ double PhysicsObject::angle(Eigen::Vector2d vec)
 void PhysicsObject::applyGravity(double dt)
 {
 	worldVelocity_.y() += (gravityConstant_/mass_ * gravityScale_ * dt);
+}
+
+void PhysicsObject::updateVelocityNorm()
+{
+	velocityNorm_ = worldVelocity_.norm();
+	maxVelocityNorm_ = std::max(velocityNorm_, maxVelocityNorm_);
 }

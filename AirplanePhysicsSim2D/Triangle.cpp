@@ -1,10 +1,9 @@
 #include "Triangle.h"
 
-Triangle::Triangle(Eigen::Vector2d vertexA, Eigen::Vector2d vertexB, Eigen::Vector2d vertexC)
+Triangle::Triangle(Eigen::Vector2d vertexA, Eigen::Vector2d vertexB, Eigen::Vector2d vertexC) 
+	: vertices_{vertexA, vertexB, vertexC}
 {
-	this->vertices_.emplace_back(vertexA);
-	this->vertices_.emplace_back(vertexB);
-	this->vertices_.emplace_back(vertexC);
+	findMinMaxVertices();
 }
 
 sf::ConvexShape Triangle::toConvexShape() const {
@@ -61,19 +60,30 @@ Eigen::Vector2d Triangle::center() const{
 	return Eigen::Vector2d(x, y);
 }
 
+void Triangle::findMinMaxVertices() {
+	auto [x_min, x_max] = std::minmax_element(vertices_.begin(), vertices_.end(), [](const auto& a, const auto& b) { return a.x() < b.x(); });
+	auto [y_min, y_max] = std::minmax_element(vertices_.begin(), vertices_.end(), [](const auto& a, const auto& b) { return a.y() < b.y(); });
+
+	minXVertex_ = &(*x_min);
+	maxXVertex_ = &(*x_max);
+
+	minYVertex_ = &(*y_min);
+	maxYVertex_ = &(*y_max);
+}
+
 void Triangle::operator+=(Eigen::Vector2d vec)
 {
-	for (int i = 0; i < std::size(vertices_); ++i) {
+	for (int i = 0; i < 3; ++i) {
 		vertices_[i] += vec;
 	}
 }
 
-std::vector<Eigen::Vector2d>& Triangle::getVertices()
+std::array<Eigen::Vector2d, 3>& Triangle::getVertices()
 {
 	return vertices_;
 }
 
-const std::vector<Eigen::Vector2d>& Triangle::getVertices() const
+const std::array<Eigen::Vector2d, 3>& Triangle::getVertices() const
 {
 	return vertices_;
 }
