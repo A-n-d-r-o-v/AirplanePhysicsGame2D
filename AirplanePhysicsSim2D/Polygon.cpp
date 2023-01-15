@@ -4,6 +4,21 @@ Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices) : vertices_(verti
 	triangles_ = triangulate();
 }
 
+Polygon::Polygon(std::vector<Eigen::Vector2d>& vertices, double scale)
+{
+	std::transform(vertices.begin(), vertices.end(), vertices.begin(),
+		[scale](const Eigen::Vector2d& v) { return Eigen::Vector2d{ v[0] * scale, v[1] * scale }; });
+
+	vertices_ = vertices;
+
+	//for (Eigen::Vector2d & element : vertices) {
+	//	element.x() *= scale;
+	//	element.y() *= scale;
+	//}
+
+	triangles_ = triangulate();
+}
+
 void Polygon::rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint)
 {
 	Eigen::Rotation2Dd t(theta);

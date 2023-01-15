@@ -3,11 +3,12 @@
 #include "polygon.h"
 #include "physicsobject.h"
 #include "airplane.h"
+#include "TerrainGenerator.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1200, 900), "My airplane works!");
-    int cameraLookahead = 800;
+    int cameraLookahead = 300;
     int timeScale = 500;
 
     // (Load configuration with auto-scaling)
@@ -27,11 +28,14 @@ int main()
         Eigen::Vector2d(0.0, 50.0)
     };
     
-    Polygon planeShape = Polygon{ vertices };
-    Airplane planeObj = Airplane(planeShape, 1100, 1);
+    Polygon planeShape = Polygon{ vertices, 0.1 };
+    Airplane planeObj = Airplane(planeShape, 4100, 1);
+
+    TerrainGenerator terrainGenerator(TerrainType::Mountains);
+    terrainGenerator.generateMountainSegment(-3000, 50000, false);
 
     sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
-    playerView.zoom(8.0f);
+    playerView.zoom(2.0f);
 
     // TODO create world object with dynamic circles
     std::vector<sf::CircleShape> circles;
@@ -40,7 +44,7 @@ int main()
             sf::CircleShape circle;
             circle.setFillColor(sf::Color(100, 250, 50));
             circle.setRadius(10);
-            circle.setPosition(i * 5000, j * 5000);
+            circle.setPosition(i * 1000, j * 1000);
             circles.emplace_back(circle);
         }
     }
@@ -72,8 +76,8 @@ int main()
             accumulator -= dt;
 
         }
-
-        std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
+        std::cout << planeObj.globalPosition().x() << ", " << planeObj.globalPosition().y() << std::endl;
+        //std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
 
         // TODO: Create world with point indicators.
 
@@ -81,6 +85,9 @@ int main()
 
         window.draw(planeObj.shape());
 
+        for (const auto& polygon : terrainGenerator.polygons()) {
+            window.draw(polygon);
+        }
         for (const auto& circle : circles) {
             window.draw(circle);
         }

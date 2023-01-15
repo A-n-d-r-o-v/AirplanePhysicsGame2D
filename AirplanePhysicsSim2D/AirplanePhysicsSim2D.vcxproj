@@ -144,15 +144,23 @@
   <ItemGroup>
     <ClCompile Include="Airplane.cpp" />
     <ClCompile Include="AirplanePhysicsSim2D.cpp" />
+    <ClCompile Include="MountainSegment.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="TerrainGenerator.cpp" />
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="TunnelSegment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Airplane.h" />
+    <ClInclude Include="Bezier.h" />
+    <ClInclude Include="MountainSegment.h" />
+    <ClInclude Include="PerlinNoise.hpp" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Polygon.h" />
+    <ClInclude Include="TerrainGenerator.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="TunnelSegment.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

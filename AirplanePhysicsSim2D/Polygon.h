@@ -13,6 +13,8 @@ class Polygon : public sf::Drawable
 public:
 	Polygon(const std::vector<Eigen::Vector2d>& vertices);
 
+	Polygon(std::vector<Eigen::Vector2d>& vertices, double scale);
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	
 	void rotateAroundPivot(double theta, Eigen::Vector2d pivotPoint); // Rotate around center of mass.

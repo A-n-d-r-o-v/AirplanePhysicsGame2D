@@ -22,16 +22,16 @@ private:
 	/* ---- PARAMS ---- */
 	double dragAOAMultiplier_ = 1.0; // AOA impact on drag
 	double dragAOABias_ = 0.1; // Drag AOA bias
-	double dragScale_ = 5; // Drag scale
+	double dragScale_ = 340; // Drag scale
 
-	double angularDragScale = 13000;
+	double angularDragScale = 70000;
 
 	double liftAOAMultiplier_ = 1; // AOA impact on lift
 	double liftAOABias_ = 0.3;
-	double liftScale_ = 3;
+	double liftScale_ = 120;
 
-	double thrustPower_ = 70; // Applied thrust force from input
-	double pitchPower_ = 0.038; // Applied angular force from input
+	double thrustPower_ = 100; // Applied thrust force from input
+	double pitchPower_ = 0.36; // Applied angular force from input
 	/* ---------------- */
 
 	double angleToGround_;
