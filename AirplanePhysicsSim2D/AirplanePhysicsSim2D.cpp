@@ -39,10 +39,6 @@ int main()
 
     Universe universe{ terrainGenerator, camera, planeObj };
     
-    //sf::View playerView(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
-
-    //playerView.zoom(2.0f);
-
     // TODO create world object with dynamic circles
     std::vector<sf::CircleShape> circles;
     for (int i = 0; i < 60; ++i) {

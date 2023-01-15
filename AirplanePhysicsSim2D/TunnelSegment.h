@@ -4,30 +4,35 @@
 #include <memory>
 
 #include "Polygon.h"
-
-class TerrainGenerator;
+#include "Bezier.h"
 
 class TunnelSegment
 {
 public:
-	TunnelSegment(const std::pair<Eigen::Vector2d, Eigen::Vector2d>& innerEndPoints, bool isInner);
-	TunnelSegment(Eigen::Vector2d innerStartPoint, Eigen::Vector2d innerEndPoint, bool isInner);
+	TunnelSegment(Eigen::Vector2f innerStartPoint, Eigen::Vector2f innerEndPoint, const std::pair<double, double>& entryExitAngles, bool isInner);
+
+	double getStartThickness() const;
+	double getEndThickness() const;
+	bool isInner() const;
+
+	std::vector<Eigen::Vector2d> shapePoints() const;
 
 private:
-	std::pair<Eigen::Vector2d, Eigen::Vector2d> innerEndPoints_;
-	std::vector<Eigen::Vector2d> supportPoints_;
+	std::pair<Bezier::Vec2, Bezier::Vec2> innerEndPoints_;
+	const std::pair<double, double>& entryExitAngles_;
+	//std::vector<Eigen::Vector2d> supportPoints_;
+	std::pair<Bezier::Vec2, Bezier::Vec2> supportPoints_; // Using a pair of support points for now
 
-	std::shared_ptr<TerrainGenerator> generator_;
+	Bezier::Bezier<3> cubicBezier_;
+	std::vector<Eigen::Vector2d> shapePoints_; // TODO: outer shape: scale bezier?
 
-	std::vector<Eigen::Vector2d> shapePoints; // TODO: outer shape: scale bezier?
-
-	double startThickness_, endThickness_;
+	double startThickness_ = 50, endThickness_ = 50;
 	bool isInner_;
 
 	std::vector<Eigen::Vector2d> generateInnerCurve();
 	void transformToOuterCurve(); // Transform inner curve to outer curve, accounting for thickness
-	
-	[[nodiscard]]
-	Polygon outerTunnelShape();  // Create a shape from tunnel perimeter --> bedrock
+
+	void calculateSupportPoints();
+
 };
 
