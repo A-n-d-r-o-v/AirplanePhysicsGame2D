@@ -30,6 +30,11 @@ std::vector<Eigen::Vector2d> TunnelSegment::toOuterShapePoints(Bezier::Bezier<3>
 	return std::vector<Eigen::Vector2d>();
 }
 
+void TunnelSegment::setTunnelThickness(std::pair<uint16_t, uint16_t>& tunnelThickness)
+{
+	tunnelThickness_ = tunnelThickness;
+}
+
 std::vector<Eigen::Vector2d> TunnelSegment::generateCurve()
 {
 	std::vector<Eigen::Vector2d> points;
@@ -46,7 +51,20 @@ std::vector<Eigen::Vector2d> TunnelSegment::generateCurve()
 	return points;
 }
 
+Bezier::Point& TunnelSegment::recalculateSupportPoint(uint16_t pointIndex, const Bezier::Bezier<3>& fromBezier)
+{
+	Bezier::Point point = bezierPoints_[pointIndex];
 
+	float lengthRatio = controlPointLengthRatios()[pointIndex];
+	float newLength = (tunnelThickness_.first * lengthRatio) + (tunnelThickness_.second * (1 - lengthRatio));
+
+	Bezier::Vec2 scaledNormal = fromBezier.normalAt(lengthRatio) * newLength;
+
+	point.x += scaledNormal.x;
+	point.y += scaledNormal.y;
+
+	return point;
+}
 
 std::vector<float> TunnelSegment::controlPointLengthRatios()
 {
@@ -74,18 +92,7 @@ void TunnelSegment::calculateSupportPoints(std::optional<Bezier::Bezier<3>> from
 		Bezier::Bezier<3>& bezier = fromBezier.value();
 
 		// Re-calculate support points
-		std::vector lengthRatioVec = controlPointLengthRatios();
-
-		// First and last indices correspond to endPoints, we're looking for the support points
-		// TODO. Fix this ugly mess when implementing std::vector for support points
-		std::pair<Bezier::Point, Bezier::Point> normalsAtSupportPoints = std::make_pair(
-			bezier.normalAt(lengthRatioVec[1]),
-			bezier.normalAt(lengthRatioVec[2])
-		);
-	
-		//float controlCurveLen = 
-
-		//bezier.norm
-
+		supportPoints_.first = recalculateSupportPoint(1, bezier);
+		supportPoints_.second = recalculateSupportPoint(2, bezier);
 	}
 }
