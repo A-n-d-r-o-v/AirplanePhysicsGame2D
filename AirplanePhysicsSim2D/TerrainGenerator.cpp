@@ -10,9 +10,14 @@ void TerrainGenerator::generateMountainSegment(int startPoint, int endPoint, int
 {	
 	if (hasTunnel) {
 		std::cout << "Generating tunnel top segment..." << std::endl;
-		polygons_.emplace_back(mountainTunnelSegment(startPoint, endPoint));
+		std::pair<Polygon, TunnelSegment> topSegment = mountainTunnelSegment(startPoint, endPoint);
+
+		polygons_.emplace_back(topSegment.first);
+
 		std::cout << "Generating tunnel bottom segment..." << std::endl;
-		polygons_.emplace_back(tunnelBottomSegment(startPoint, endPoint));
+		TunnelSegment topTunnel = topSegment.second;
+		std::pair<Polygon, TunnelSegment> bottomSegment = tunnelBottomSegment(startPoint, endPoint, topTunnel);
+		polygons_.emplace_back(bottomSegment.first);
 	}
 	else {
 		std::cout << "Generating mountain segment..." << std::endl;
@@ -30,23 +35,7 @@ std::vector<Polygon> TerrainGenerator::polygons()
 	return polygons_;
 }
 
-Polygon TerrainGenerator::tunnelBottomSegment(int startPoint, int endPoint)
-{
-	std::vector<Eigen::Vector2d> points;
-
-	TunnelSegment tunnel = generateTunnel(startPoint, endPoint);
-	// Traverse tunnel points
-	std::vector shapePoints = tunnel.shapePoints();
-	for (auto it = shapePoints.begin(); it != shapePoints.end(); ++it) {
-		points.emplace_back(*it);
-	}
-	points.emplace_back(endPoint, bottomLevel_);
-	points.emplace_back(startPoint, bottomLevel_);
-	
-	return Polygon{ points };
-}
-
-Polygon TerrainGenerator::mountainTunnelSegment(int startPoint, int endPoint)
+std::pair<Polygon, TunnelSegment> TerrainGenerator::mountainTunnelSegment(int startPoint, int endPoint)
 {
 	std::vector<Eigen::Vector2d> points;
 	
@@ -62,11 +51,43 @@ Polygon TerrainGenerator::mountainTunnelSegment(int startPoint, int endPoint)
 	}
 	// Traverse tunnel points in reverse order to create a loop
 	std::vector shapePoints = tunnel.shapePoints();
-	for (auto it = shapePoints.rbegin(); it != shapePoints.rend(); ++it) {
-		points.emplace_back(*it);
+	for (int i = std::size(shapePoints) - 1; i >= 0; --i) {
+		Eigen::Vector2d& point = shapePoints[i];
+		double height = terrainNoise(i);
+		if (point.y() < height) {
+			points.emplace_back(Eigen::Vector2d{ point.x(), 2 * height - point.y()});
+		}
+		else {
+			points.emplace_back(point);
+		}
+	}
+	//for (auto it = shapePoints.rbegin(); it != shapePoints.rend(); ++it) {
+	//	points.emplace_back(*it);
+	//}
+
+	return std::make_pair(Polygon{ points }, tunnel);
+}
+
+std::pair<Polygon, TunnelSegment> TerrainGenerator::tunnelBottomSegment(int startPoint, int endPoint, std::optional<TunnelSegment> innerTunnelOpt)
+{
+	std::vector<Eigen::Vector2d> points;
+
+	TunnelSegment tunnel = generateTunnel(startPoint, endPoint);
+	
+	if (innerTunnelOpt.has_value()) {
+		// Transform tunnel to outer tunnel
+		tunnel.toOuterShapePoints(tunnelThickness_, innerTunnelOpt.value().cubicBezier());
 	}
 
-	return Polygon{ points };
+	// Traverse tunnel points
+	std::vector shapePoints = tunnel.shapePoints();
+	for (auto it = shapePoints.begin(); it != shapePoints.end(); ++it) {
+		points.emplace_back(*it);
+	}
+	points.emplace_back(endPoint, bottomLevel_);
+	points.emplace_back(startPoint, bottomLevel_);
+
+	return std::make_pair(Polygon{ points }, tunnel);
 }
 
 Polygon TerrainGenerator::solidMountainSegment(int startPoint, int endPoint)

@@ -33,7 +33,9 @@ int main()
     Airplane planeObj = Airplane(planeShape, 6000, 1);
 
     TerrainGenerator terrainGenerator(TerrainType::Mountains);
-    terrainGenerator.generateMountainSegment(1000, 5000, true);
+    terrainGenerator.generateMountainSegment(0, 5000, false);
+    terrainGenerator.generateMountainSegment(5000, 10000, true);
+    terrainGenerator.generateMountainSegment(10000, 20000, false);
 
     Camera camera(window, planeObj);
 
@@ -74,7 +76,7 @@ int main()
 
         }
         //std::cout << planeObj.globalPosition().x() << ", " << planeObj.globalPosition().y() << std::endl;
-        std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
+        //std::cout << "Fps: "  << (int)(1 / frameTime) << std::endl;
 
         window.clear();
 

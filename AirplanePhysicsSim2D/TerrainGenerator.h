@@ -43,12 +43,12 @@ private:
 	const double frequency_ = 0.00005;
 	const int numOctaves_ = 10;
 
-	const std::pair<uint16_t, uint16_t>& tunnelThickness_{ 600, 300 };
+	const std::pair<uint16_t, uint16_t>& tunnelThickness_{ 500, 500 };
 	/* ---------------- */
 
-	Polygon tunnelBottomSegment(int startPoint, int endPoint); // The part underneath the tunnel that extends to the bottom
+	std::pair<Polygon, TunnelSegment> mountainTunnelSegment(int startPoint, int endPoint); // Solid mountain with a tunnel underneath
 
-	Polygon mountainTunnelSegment(int startPoint, int endPoint); // Solid mountain with a tunnel underneath
+	std::pair<Polygon, TunnelSegment> tunnelBottomSegment(int startPoint, int endPoint, std::optional<TunnelSegment> innerTunnelOpt = std::nullopt); // The part underneath the tunnel that extends to the bottom
 
 	Polygon solidMountainSegment(int startPoint, int endPoint); // Solid mountain with no connected tunnel
 

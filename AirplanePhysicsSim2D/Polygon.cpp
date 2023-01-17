@@ -2,7 +2,9 @@
 
 Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices, bool enableCulling) 
 	: vertices_(vertices) {
+	std::cout << "Triangulating..." << std::endl;
 	triangles_ = triangulate(enableCulling);
+	std::cout << "Done triangulating..." << std::endl;
 }
 
 Polygon::Polygon(std::vector<Eigen::Vector2d>& vertices, double scale, bool enableCulling)
