@@ -1,9 +1,10 @@
 #pragma once
 
 #include <Eigen/Core>
-
-#include "polygon.h"
 #include <iostream>
+
+#include "Polygon.h"
+#include "Util.h"
 
 class PhysicsObject
 {
@@ -46,10 +47,6 @@ public:
 	double maxVelocityNorm() const;
 
 	void rotateAroundCOM(double theta);
-
-	static double angle(Eigen::Vector2d vec); // TODO: Move to util class
-
-	static double wrapAngle(double theta); // Wrap angle from 0 to 2*pi . TODO: Move to util class
 
 protected:
 	double mass_;

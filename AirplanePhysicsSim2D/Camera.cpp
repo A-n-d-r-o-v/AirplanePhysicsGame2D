@@ -41,7 +41,7 @@ Eigen::Vector2d Camera::lookAheadVec()
 	angVelocityAngle = std::min(angVelocityAngle, -maxAngularLookAhead_);
 
 	double angle = -objectToFollow_.angle() + angVelocityAngle;
-	angle = PhysicsObject::wrapAngle(angle);
+	angle = Util::wrapAngle(angle);
 
 	Eigen::Vector2d lookAheadVec{ 
 		halfViewSize.x() * lookAhead_.x() * cos(angle) ,

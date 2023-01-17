@@ -63,8 +63,8 @@ const Eigen::Vector2d PhysicsObject::toLocalSpace(const Eigen::Vector2d& coordin
 
 void PhysicsObject::update(double dt)
 {
-	angle_ = wrapAngle(angle_);
-	velocityAngle_ = wrapAngle(angle(worldVelocity_));
+	angle_ = Util::wrapAngle(angle_);
+	velocityAngle_ = Util::wrapAngle(Util::angle(worldVelocity_));
 
 	updateLocalVelocity();
 	updateWorldVelocity();
@@ -136,17 +136,6 @@ void PhysicsObject::rotateAroundCOM(double theta)
 	Eigen::Vector2d pivot = globalPosition_ + localCenterOfMass_;
 	shape_.rotateAroundPivot(-theta, pivot);
 	angle_ += theta;
-}
-
-double PhysicsObject::wrapAngle(double theta)
-{
-	const double twoPi = 2 * EIGEN_PI;
-	return theta - twoPi * floor(theta / twoPi);
-}
-
-double PhysicsObject::angle(Eigen::Vector2d vec)
-{
-	return atan2(-vec.y(), vec.x());
 }
 
 void PhysicsObject::applyGravity(double dt)

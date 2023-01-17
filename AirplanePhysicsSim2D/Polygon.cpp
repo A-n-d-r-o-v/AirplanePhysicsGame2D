@@ -7,11 +7,11 @@ Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices, bool enableCullin
 
 Polygon::Polygon(std::vector<Eigen::Vector2d>& vertices, double scale, bool enableCulling)
 {
-	std::transform(vertices.begin(), vertices.end(), vertices.begin(),
+	std::transform(std::execution::par, vertices.begin(), vertices.end(), vertices.begin(),
 		[scale](const Eigen::Vector2d& v) { return Eigen::Vector2d{ v[0] * scale, v[1] * scale }; });
 
 	vertices_ = vertices;
-
+	
 	triangles_ = triangulate(enableCulling);
 }
 

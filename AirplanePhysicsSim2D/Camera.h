@@ -20,7 +20,7 @@ private:
 
 	const PhysicsObject& objectToFollow_;
 
-	const int renderBoundMargin_ = 100;
+	const int renderBoundMargin_ = 150;
 	std::pair<int, int> renderBoundX_; // Min max x bound
 	std::pair<int, int> renderBoundY_; // Min max y bound
 
@@ -30,7 +30,7 @@ private:
 
 	const Eigen::Vector2d lookAhead_{ 0.7, 0.3 } ; // Look-ahead offset factor relative to window size
 
-	const double angularLookAhead_ = 500.4;
+	const double angularLookAhead_ = 500.0;
 	const double maxAngularLookAhead_ = EIGEN_PI / 8;
 
 	double zoomLevel_ = 2.0;

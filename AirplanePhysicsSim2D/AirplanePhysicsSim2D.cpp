@@ -9,7 +9,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1200, 900), "My airplane sounds like this: \"wreeuuummmm!!\"");
+    sf::RenderWindow window(sf::VideoMode(1200, 600), "My airplane sounds like this: \"wreeuuummmm!!\"");
     int timeScale = 500;
 
     // (Load configuration with auto-scaling)
@@ -33,7 +33,7 @@ int main()
     Airplane planeObj = Airplane(planeShape, 6000, 1);
 
     TerrainGenerator terrainGenerator(TerrainType::Mountains);
-    terrainGenerator.generateMountainSegment(0, 5000, false);
+    terrainGenerator.generateMountainSegment(1000, 5000, true);
 
     Camera camera(window, planeObj);
 

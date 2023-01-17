@@ -35,20 +35,24 @@ private:
 	const siv::PerlinNoise::seed_type seed_ = 123456u;
 	const uint16_t heightOffset_ = 8000;
 
-	const int bottomLevel = 30000; // Height of map bottom
+	const int bottomLevel_ = 30000; // Height of map bottom
 
-	int spacing_ = 20; // Pixels per vertex in the local x direction
+	const int spacing_ = 40; // Pixels per vertex in the local x direction
 
 	const double amplitude_ = 13000.0;
 	const double frequency_ = 0.00005;
 	const int numOctaves_ = 10;
+
+	const std::pair<uint16_t, uint16_t>& tunnelThickness_{ 600, 300 };
 	/* ---------------- */
 
-	std::vector<Eigen::Vector2d> tunnelBottomSegment(int startPoint, int endPoint, TunnelSegment& tunnel); // The part underneath the tunnel that extends to the bottom
+	Polygon tunnelBottomSegment(int startPoint, int endPoint); // The part underneath the tunnel that extends to the bottom
 
-	std::vector<Eigen::Vector2d> mountainTunnelSegment(int startPoint, int endPoint, TunnelSegment& tunnel); // Solid mountain with a tunnel underneath
+	Polygon mountainTunnelSegment(int startPoint, int endPoint); // Solid mountain with a tunnel underneath
 
-	std::vector<Eigen::Vector2d> solidMountainSegment(int startPoint, int endPoint); // Solid mountain with no connected tunnel
+	Polygon solidMountainSegment(int startPoint, int endPoint); // Solid mountain with no connected tunnel
+
+	TunnelSegment generateTunnel(int startPoint, int endPoint);
 
 };
 

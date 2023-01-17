@@ -64,7 +64,7 @@ void Airplane::calculateState()
 // TODO: AOA should calculate difference between angle (currently AOA) and velocity direction (from global velocity)
 double Airplane::toGroundAngle(double theta)
 {
-	double groundAngle = wrapAngle(theta); // later: calculate if plane is upside-down like this (pi > angle > 3pi or something)
+	double groundAngle = Util::wrapAngle(theta); // later: calculate if plane is upside-down like this (pi > angle > 3pi or something)
 	short sign = 1;
 
 	// Bottom half: invert sign

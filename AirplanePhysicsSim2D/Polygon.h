@@ -5,6 +5,7 @@
 #include <Eigen/Geometry>
 #include <vector>
 #include <iostream>
+#include <execution>
 #include "triangle.h"
 
 
