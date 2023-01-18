@@ -38,14 +38,12 @@ std::vector<Eigen::Vector2d> TunnelSegment::generateCurve()
 	std::vector<Eigen::Vector2d> points;
 
 	float numPoints = (innerEndPoints_.second.x - innerEndPoints_.first.x) / spacing_;
-	std::cout << "points: " << numPoints << std::endl;
 
 	// Sample points from bezier curve (0 -> 1)
 	for (float i = 0; i <= 1; i += 1.0 / (numPoints - 1)) {
 		Bezier::Point bezierPoint = cubicBezier_.valueAt(i);
 		float flatX = innerEndPoints_.first.x + (i * (innerEndPoints_.second.x - innerEndPoints_.first.x)); // Scale i instead of taking bezierPoint.x
 		points.emplace_back(flatX, bezierPoint.y);
-		std::cout << i << std::endl;
 	}
 	return points;
 }
@@ -59,13 +57,8 @@ Bezier::Point TunnelSegment::recalculateSupportPoint(uint16_t pointIndex, const 
 
 	Bezier::Vec2 scaledNormal = fromBezier.normalAt(lengthRatio) * (newLength * widthScale_);
 
-	std::cout << "tunnelThickness_.first: " << scaledNormal.angleDeg() << std::endl;
-
-	std::cout << "Calculating from: (" << point.x << ", " << point.y << ") to (";
 	point.x += scaledNormal.x;
 	point.y += scaledNormal.y;
-
-	std::cout << point.x << ", " << point.y << ")" << std::endl;
 
 	return point;
 }

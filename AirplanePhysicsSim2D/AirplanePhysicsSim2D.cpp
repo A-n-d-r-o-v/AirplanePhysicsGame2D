@@ -28,7 +28,7 @@ int main()
         Eigen::Vector2d(300.0, 50.0),
         Eigen::Vector2d(0.0, 50.0)
     };
-    
+
     Polygon planeShape = Polygon{ vertices, 0.2, false };
     Airplane planeObj = Airplane(planeShape, 6000, 1);
 

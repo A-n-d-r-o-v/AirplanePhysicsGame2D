@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Util.h"
+
 struct Triangle
 {
 	Triangle(Eigen::Vector2d vertexA, Eigen::Vector2d vertexB, Eigen::Vector2d vertexC);
@@ -24,7 +26,11 @@ struct Triangle
 
 	void findMinMaxVertices();
 
+	bool intersects(const Triangle& other);
+
 	bool inView(int leftBound, int rightBound, int upperBound, int lowerBound);
+
+	std::array<double, 3> projections(const Eigen::Vector2d& axis_normalised) const;
 
 	void operator += (Eigen::Vector2d vec);
 
@@ -38,6 +44,8 @@ struct Triangle
 	void setVisibility(bool visible);
 	bool isVisible() const;
 
+
+
 private:
 	std::array<Eigen::Vector2d, 3> vertices_;
 
@@ -49,5 +57,13 @@ private:
 
 	bool isVisible_ = true;
 	bool enableCulling_ = true;
+
+	bool checkedCollision_ = false;
+
+	static bool isOverlapping(std::array<double, 3>& projectionsA, std::array<double, 3>& projectionsB);
+	bool boundingBoxCollides(const Triangle& other);
+	bool separatingAxisIntersect(const Triangle& other);
+	
+
 };
 

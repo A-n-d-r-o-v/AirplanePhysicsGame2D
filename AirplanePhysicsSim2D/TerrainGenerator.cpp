@@ -51,19 +51,9 @@ std::pair<Polygon, TunnelSegment> TerrainGenerator::mountainTunnelSegment(int st
 	}
 	// Traverse tunnel points in reverse order to create a loop
 	std::vector shapePoints = tunnel.shapePoints();
-	for (int i = std::size(shapePoints) - 1; i >= 0; --i) {
-		Eigen::Vector2d& point = shapePoints[i];
-		double height = terrainNoise(i);
-		if (point.y() < height) {
-			points.emplace_back(Eigen::Vector2d{ point.x(), 2 * height - point.y()});
-		}
-		else {
-			points.emplace_back(point);
-		}
+	for (auto it = shapePoints.rbegin(); it != shapePoints.rend(); ++it) {
+		points.emplace_back(*it);
 	}
-	//for (auto it = shapePoints.rbegin(); it != shapePoints.rend(); ++it) {
-	//	points.emplace_back(*it);
-	//}
 
 	return std::make_pair(Polygon{ points }, tunnel);
 }

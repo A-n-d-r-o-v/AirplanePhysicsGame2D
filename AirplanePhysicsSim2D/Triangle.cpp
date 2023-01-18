@@ -72,6 +72,20 @@ void Triangle::findMinMaxVertices() {
 	maxYVertex_ = std::make_shared<Eigen::Vector2d>(*y_max);
 }
 
+bool Triangle::intersects(const Triangle& other) {
+	// Later when looping through triangles: set checkedCollision to true in first for loop
+	// In PhysicsObject, add collides(std::vector<Polygon> otherPolys)
+	// Check collision for all PhysicsObjects in Universe
+
+	// Do quick bounding box collision
+	if (!boundingBoxCollides(other)) {
+		return false;
+	}
+
+	return separatingAxisIntersect(other);
+}
+
+
 bool Triangle::inView(int leftBound, int rightBound, int upperBound, int lowerBound) {
 		
 	return !(
@@ -113,5 +127,65 @@ void Triangle::setVisibility(bool visible) {
 
 bool Triangle::isVisible() const {
 	return isVisible_;
+}
+
+std::array<double, 3> Triangle::projections(const Eigen::Vector2d& axis_normalised) const
+{
+	std::array<double, 3> projections{};
+
+	for (size_t i = 0; i < vertices_.size(); ++i) {
+		const double projection = axis_normalised.dot(vertices_[i]);
+		projections[i] = projection;
+	}
+	return projections;
+}
+
+bool Triangle::isOverlapping(std::array<double, 3>& projectionsA, std::array<double, 3>& projectionsB) {
+	const double minProjectionA = *std::min_element(projectionsA.begin(), projectionsA.end());
+	const double maxProjectionA = *std::max_element(projectionsA.begin(), projectionsA.end());
+	const double minProjectionB = *std::min_element(projectionsB.begin(), projectionsB.end());
+	const double maxProjectionB = *std::max_element(projectionsB.begin(), projectionsB.end());
+
+	// True if projection overlaps but does not necessarily mean the polygons are intersecting yet
+	return !(maxProjectionA < minProjectionB or maxProjectionB < minProjectionA);
+}
+
+bool Triangle::separatingAxisIntersect(const Triangle& other)
+{
+	// Check for overlap of projections along the normals of all the edges in this triangle
+	for (uint16_t i = 0; i < vertices_.size(); ++i) {
+		const Eigen::Vector2d next{ vertices_[(i + 1) % vertices_.size()] };
+		const Eigen::Vector2d axisNorm = Util::unitOrthogonal(vertices_[i], next);
+		std::array<double, 3> projectionsThis = projections(axisNorm);
+		std::array<double, 3> projectionsOther = other.projections(axisNorm);
+
+		if (!isOverlapping(projectionsThis, projectionsOther)) return false;
+	}
+	// Check for overlap of projections along the normals of all the edges in the other triangle
+	for (uint16_t i = 0; i < other.vertices_.size(); ++i) {
+		const Eigen::Vector2d next{ other.vertices_[(i + 1) % other.vertices_.size()] };
+		const Eigen::Vector2d axisNorm = Util::unitOrthogonal(other.vertices_[i], next);
+		std::array<double, 3> projectionsThis = projections(axisNorm);
+		std::array<double, 3> projectionsOther = other.projections(axisNorm);
+
+		if (!isOverlapping(projectionsThis, projectionsOther)) return false;
+	}
+	return true;
+}
+
+bool Triangle::boundingBoxCollides(const Triangle& other)
+{
+	// x values do not overlap
+	if (maxXVertex_->x() < other.minXVertex_->x() || other.maxXVertex_->x() < minXVertex_->x()) {
+		return false;
+	}
+
+	// y values do not overlap
+	if (maxYVertex_->y() < other.minYVertex_->y() || other.maxYVertex_->y() < minYVertex_->y()) {
+		return false;
+	}
+
+	// If the x and y coordinates of the bounding boxes overlap, the triangles may be colliding
+	return true;
 }
 
