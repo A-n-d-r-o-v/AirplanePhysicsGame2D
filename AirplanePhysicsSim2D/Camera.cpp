@@ -4,7 +4,7 @@ Camera::Camera(sf::RenderWindow& window, const PhysicsObject& objectToFollow)
 	: objectToFollow_(objectToFollow), window_(window)
 {
 	view_ = sf::View(sf::FloatRect(0, 0, (float)window.getSize().x, (float)window.getSize().y));
-	view_.zoom(zoomLevel_);
+	view_.zoom((float)zoomLevel_);
 
 	calculateRenderBounds();
 }
@@ -16,7 +16,7 @@ void Camera::updateView()
 	view_.setCenter((float)(viewCenter.x()), (float)(viewCenter.y()));
 
 	calculateZoomLevel();
-	view_.zoom(zoomLevel_);
+	view_.zoom((float)zoomLevel_);
 
 	calculateRenderBounds();
 
@@ -52,14 +52,14 @@ Eigen::Vector2d Camera::lookAheadVec()
 
 void Camera::calculateRenderBounds()
 {
-	const int width = view_.getSize().x;
-	const int height = view_.getSize().y;
+	const float width = view_.getSize().x;
+	const float height = view_.getSize().y;
 
-	renderBoundX_.first = view_.getCenter().x - (int)(width / 2.0f) - renderBoundMargin_;
-	renderBoundX_.second = view_.getCenter().x + (int)(width / 2.0f) + renderBoundMargin_;
+	renderBoundX_.first = (int) (view_.getCenter().x - (width / 2.0f) - renderBoundMargin_);
+	renderBoundX_.second = (int) (view_.getCenter().x + (width / 2.0f) + renderBoundMargin_);
 	
-	renderBoundY_.first = view_.getCenter().y - (int)(height / 2.0f) - renderBoundMargin_;
-	renderBoundY_.second = view_.getCenter().y + (int)(height / 2.0f) + renderBoundMargin_;
+	renderBoundY_.first = (int) (view_.getCenter().y - (height / 2.0f) - renderBoundMargin_);
+	renderBoundY_.second = (int) (view_.getCenter().y + (height / 2.0f) + renderBoundMargin_);
 }
 
 void Camera::calculateZoomLevel()
@@ -72,7 +72,6 @@ void Camera::calculateZoomLevel()
 
 	double newZoom = (zoomRange_.first + (zoomRangeInterval * scaledVelocity));
 	zoomLevel_ = newZoom / (prevZoomLevel_);
-	//std::cout << "zoomLevel_: " << (zoomRange_.first + (zoomRangeInterval * scaledVelocity)) << ", prev: " << prevZoomLevel_ << ", zoom: " << zoomLevel_ << std::endl;
 
 	prevZoomLevel_ = newZoom;
 }

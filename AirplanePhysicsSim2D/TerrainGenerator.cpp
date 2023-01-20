@@ -9,14 +9,17 @@ TerrainGenerator::TerrainGenerator(const TerrainType terrainType)
 void TerrainGenerator::generateMountainSegment(int startPoint, int endPoint, int hasTunnel)
 {	
 	if (hasTunnel) {
-		std::cout << "Generating tunnel top segment..." << std::endl;
-		std::pair<Polygon, TunnelSegment> topSegment = mountainTunnelSegment(startPoint, endPoint);
+		std::cout << "Generating tunnel segment..." << std::endl;
+		std::pair<APGeom::Polygon, TunnelSegment> topSegment = mountainTunnelSegment(startPoint, endPoint);
 
+		if (topSegment.first.triangles().empty()) {
+			std::cout << "Could not generate segment with tunnel. Attempting to generate segment without tunnel..." << std::endl;
+			return generateMountainSegment(startPoint, endPoint, false);
+		}
 		polygons_.emplace_back(topSegment.first);
 
-		std::cout << "Generating tunnel bottom segment..." << std::endl;
 		TunnelSegment topTunnel = topSegment.second;
-		std::pair<Polygon, TunnelSegment> bottomSegment = tunnelBottomSegment(startPoint, endPoint, topTunnel);
+		std::pair<APGeom::Polygon, TunnelSegment> bottomSegment = tunnelBottomSegment(startPoint, endPoint, topTunnel);
 		polygons_.emplace_back(bottomSegment.first);
 	}
 	else {
@@ -30,12 +33,12 @@ double TerrainGenerator::terrainNoise(int x)
 	return -(amplitude_ * perlinNoiseGenerator_.octave1D(x * frequency_, numOctaves_)) + heightOffset_;
 }
 
-std::vector<Polygon> TerrainGenerator::polygons()
+std::vector<APGeom::Polygon> TerrainGenerator::polygons()
 {
 	return polygons_;
 }
 
-std::pair<Polygon, TunnelSegment> TerrainGenerator::mountainTunnelSegment(int startPoint, int endPoint)
+std::pair<APGeom::Polygon, TunnelSegment> TerrainGenerator::mountainTunnelSegment(int startPoint, int endPoint)
 {
 	std::vector<Eigen::Vector2d> points;
 	
@@ -55,10 +58,10 @@ std::pair<Polygon, TunnelSegment> TerrainGenerator::mountainTunnelSegment(int st
 		points.emplace_back(*it);
 	}
 
-	return std::make_pair(Polygon{ points }, tunnel);
+	return std::make_pair(APGeom::Polygon{ points }, tunnel);
 }
 
-std::pair<Polygon, TunnelSegment> TerrainGenerator::tunnelBottomSegment(int startPoint, int endPoint, std::optional<TunnelSegment> innerTunnelOpt)
+std::pair<APGeom::Polygon, TunnelSegment> TerrainGenerator::tunnelBottomSegment(int startPoint, int endPoint, const std::optional<TunnelSegment>& innerTunnelOpt)
 {
 	std::vector<Eigen::Vector2d> points;
 
@@ -77,10 +80,10 @@ std::pair<Polygon, TunnelSegment> TerrainGenerator::tunnelBottomSegment(int star
 	points.emplace_back(endPoint, bottomLevel_);
 	points.emplace_back(startPoint, bottomLevel_);
 
-	return std::make_pair(Polygon{ points }, tunnel);
+	return std::make_pair(APGeom::Polygon{ points }, tunnel);
 }
 
-Polygon TerrainGenerator::solidMountainSegment(int startPoint, int endPoint)
+APGeom::Polygon TerrainGenerator::solidMountainSegment(int startPoint, int endPoint)
 {
 	std::vector<Eigen::Vector2d> points;
 	
@@ -92,7 +95,7 @@ Polygon TerrainGenerator::solidMountainSegment(int startPoint, int endPoint)
 	points.emplace_back(endPoint, bottomLevel_);
 	points.emplace_back(startPoint, bottomLevel_);
 	
-	return Polygon{ points };
+	return APGeom::Polygon{ points };
 }
 
 TunnelSegment TerrainGenerator::generateTunnel(int startPoint, int endPoint)

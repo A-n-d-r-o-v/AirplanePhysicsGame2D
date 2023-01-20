@@ -1,6 +1,8 @@
 #include "Triangle.h"
 
-Triangle::Triangle(Eigen::Vector2d vertexA, Eigen::Vector2d vertexB, Eigen::Vector2d vertexC) 
+using namespace APGeom;
+
+Triangle::Triangle(Eigen::Vector2d vertexA, Eigen::Vector2d vertexB, Eigen::Vector2d vertexC)
 	: vertices_{vertexA, vertexB, vertexC}
 {
 	findMinMaxVertices();

@@ -1,5 +1,7 @@
 #include "polygon.h"
 
+using namespace APGeom;
+
 Polygon::Polygon(const std::vector<Eigen::Vector2d>& vertices, bool enableCulling) 
 	: vertices_(vertices) {
 	std::cout << "Triangulating..." << std::endl;
@@ -80,6 +82,7 @@ const std::vector<sf::CircleShape> Polygon::cornerCircles() const {
 std::vector<std::shared_ptr<Triangle>> Polygon::triangulate(bool enableCulling)
 {
 	std::vector<Eigen::Vector2d> vertices = vertices_;
+	assert(size(vertices_) >= 3);
 
 	std::vector<std::shared_ptr<Triangle>> triangles;
 	triangleCount_ = std::size(vertices) - 2;
@@ -88,6 +91,7 @@ std::vector<std::shared_ptr<Triangle>> Polygon::triangulate(bool enableCulling)
 	while (std::size(vertices) > 3) {
 		uint16_t vertexCount = std::size(vertices);
 
+		bool foundEar = false;
 		for (uint16_t i = 0; i < vertexCount; ++i) {
 			int prevIndex = i == 0				? vertexCount-1 : i - 1;
 			int nextIndex = i == vertexCount-1	? 0				: i + 1;
@@ -114,6 +118,7 @@ std::vector<std::shared_ptr<Triangle>> Polygon::triangulate(bool enableCulling)
 				}
 			}
 			if (isEar) {
+				foundEar = true;
 				Triangle t = Triangle(prevVec, currVec, nextVec);
 				t.setEnableCulling(enableCulling);
 				triangles.emplace_back(std::make_shared<Triangle>(t));
@@ -122,6 +127,11 @@ std::vector<std::shared_ptr<Triangle>> Polygon::triangulate(bool enableCulling)
 				vertexCount--;
 				break;
 			}
+		}
+		if (!foundEar) {
+			triangles.clear();
+			std::cout << "WARNING: Polygon could not be triangulated!" << std::endl;
+			return triangles;
 		}
 	}
 

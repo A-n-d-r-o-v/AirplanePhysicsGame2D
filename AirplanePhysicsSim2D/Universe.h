@@ -13,7 +13,9 @@ public:
 
 	void renderStep(sf::RenderWindow& window);
 
-	bool inRenderView(Triangle& triangle);
+	bool inRenderView(APGeom::Triangle& triangle);
+
+
 
 private:
 
@@ -21,7 +23,7 @@ private:
 	Camera* camera_;
 	Airplane* player_;
 
-	std::vector<std::shared_ptr<Polygon>> polygons_; 
+	std::vector<std::shared_ptr<APGeom::Polygon>> polygons_;
 	//std::vector<Polygon> polygons_;
 
 	const double timeScale_ = 500;

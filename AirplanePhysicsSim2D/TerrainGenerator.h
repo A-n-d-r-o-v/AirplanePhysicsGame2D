@@ -23,13 +23,13 @@ public:
 
 	double terrainNoise(int x);
 	
-	std::vector<Polygon> polygons();
+	std::vector<APGeom::Polygon> polygons();
 
 private:
 	siv::PerlinNoise perlinNoiseGenerator_;
 	TerrainType terrainType_;
 
-	std::vector<Polygon> polygons_;
+	std::vector<APGeom::Polygon> polygons_;
 
 	/* Parameters, TODO load from JSON config file */
 	const siv::PerlinNoise::seed_type seed_ = 123456u;
@@ -43,14 +43,14 @@ private:
 	const double frequency_ = 0.00005;
 	const int numOctaves_ = 10;
 
-	const std::pair<uint16_t, uint16_t>& tunnelThickness_{ 500, 500 };
+	const std::pair<uint16_t, uint16_t>& tunnelThickness_{ 350, 350 };
 	/* ---------------- */
 
-	std::pair<Polygon, TunnelSegment> mountainTunnelSegment(int startPoint, int endPoint); // Solid mountain with a tunnel underneath
+	std::pair<APGeom::Polygon, TunnelSegment> mountainTunnelSegment(int startPoint, int endPoint); // Solid mountain with a tunnel underneath
 
-	std::pair<Polygon, TunnelSegment> tunnelBottomSegment(int startPoint, int endPoint, std::optional<TunnelSegment> innerTunnelOpt = std::nullopt); // The part underneath the tunnel that extends to the bottom
+	std::pair<APGeom::Polygon, TunnelSegment> tunnelBottomSegment(int startPoint, int endPoint, const std::optional<TunnelSegment>& innerTunnelOpt = std::nullopt); // The part underneath the tunnel that extends to the bottom
 
-	Polygon solidMountainSegment(int startPoint, int endPoint); // Solid mountain with no connected tunnel
+	APGeom::Polygon solidMountainSegment(int startPoint, int endPoint); // Solid mountain with no connected tunnel
 
 	TunnelSegment generateTunnel(int startPoint, int endPoint);
 

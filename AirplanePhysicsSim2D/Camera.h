@@ -20,7 +20,7 @@ private:
 
 	const PhysicsObject& objectToFollow_;
 
-	const int renderBoundMargin_ = 150;
+	const int renderBoundMargin_ = 100;
 	std::pair<int, int> renderBoundX_; // Min max x bound
 	std::pair<int, int> renderBoundY_; // Min max y bound
 

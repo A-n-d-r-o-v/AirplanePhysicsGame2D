@@ -9,7 +9,7 @@
 class PhysicsObject
 {
 public:
-	PhysicsObject(Polygon& shape, double mass, double gravityScale);
+	PhysicsObject(APGeom::Polygon& shape, double mass, double gravityScale);
 
 	void calculateLocalCOM(); // Calculate local center of mass. Does not need to be re-calculated after rotation.
 
@@ -30,7 +30,7 @@ public:
 
 	virtual void update(double dt);
 
-	Polygon shape() const;
+	APGeom::Polygon shape() const;
 
 	Eigen::Vector2d globalPosition() const;
 
@@ -52,7 +52,7 @@ protected:
 	double mass_;
 	double gravityScale_ = 1.0;
 	double angle_ = 0.0;
-	Polygon shape_;
+	APGeom::Polygon shape_;
 
 	Eigen::Vector2d globalPosition_;
 	Eigen::Vector2d localCenterOfMass_;

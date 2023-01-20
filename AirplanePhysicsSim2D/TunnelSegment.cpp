@@ -28,7 +28,7 @@ void TunnelSegment::toOuterShapePoints(const std::pair<uint16_t, uint16_t>& tunn
 	shapePoints_ = generateCurve();
 }
 
-Bezier::Bezier<3> TunnelSegment::cubicBezier()
+Bezier::Bezier<3> TunnelSegment::cubicBezier() const
 {
 	return cubicBezier_;
 }
@@ -37,12 +37,14 @@ std::vector<Eigen::Vector2d> TunnelSegment::generateCurve()
 {
 	std::vector<Eigen::Vector2d> points;
 
-	float numPoints = (innerEndPoints_.second.x - innerEndPoints_.first.x) / spacing_;
+	const float xLen = innerEndPoints_.second.x - innerEndPoints_.first.x;
 
 	// Sample points from bezier curve (0 -> 1)
-	for (float i = 0; i <= 1; i += 1.0 / (numPoints - 1)) {
-		Bezier::Point bezierPoint = cubicBezier_.valueAt(i);
-		float flatX = innerEndPoints_.first.x + (i * (innerEndPoints_.second.x - innerEndPoints_.first.x)); // Scale i instead of taking bezierPoint.x
+	for (int i = 0; i <= xLen + spacing_; i += spacing_) {
+		float normalizedVal = std::min(i / xLen, 1.0f);
+
+		Bezier::Point bezierPoint = cubicBezier_.valueAt(normalizedVal);
+		float flatX = innerEndPoints_.first.x + (normalizedVal * (innerEndPoints_.second.x - innerEndPoints_.first.x)); // Scale i instead of taking bezierPoint.x
 		points.emplace_back(flatX, bezierPoint.y);
 	}
 	return points;

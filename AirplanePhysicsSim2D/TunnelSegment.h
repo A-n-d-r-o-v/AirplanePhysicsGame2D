@@ -14,7 +14,7 @@ public:
 
 	std::vector<Eigen::Vector2d> shapePoints() const;
 	void toOuterShapePoints(const std::pair<uint16_t, uint16_t>& tunnelThickness, Bezier::Bezier<3> fromBezier); // Transform points to an outer curve shape, i.e offset the curve size based on the tunnel thickness
-	Bezier::Bezier<3> cubicBezier();
+	Bezier::Bezier<3> cubicBezier() const;
 
 private:
 	std::pair<Bezier::Vec2, Bezier::Vec2> innerEndPoints_;

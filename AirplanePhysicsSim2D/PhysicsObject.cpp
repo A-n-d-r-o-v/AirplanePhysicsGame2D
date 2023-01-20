@@ -6,7 +6,7 @@
 
 // Future - Think: how to represent wind? Calculate from simplex noise, similar to how simplex worms work?
 
-PhysicsObject::PhysicsObject(Polygon& shape, double mass, double gravityScale=1.0) : shape_(shape), mass_(mass), gravityScale_(gravityScale)
+PhysicsObject::PhysicsObject(APGeom::Polygon& shape, double mass, double gravityScale=1.0) : shape_(shape), mass_(mass), gravityScale_(gravityScale)
 {
 	calculateLocalCOM();
 	std::cout << localCenterOfMass_.x() << ", " << localCenterOfMass_.y() << std::endl;
@@ -91,7 +91,7 @@ void PhysicsObject::updateWorldVelocity()
 	angularVelocity_ += angularAcceleration_;
 }
 
-Polygon PhysicsObject::shape() const
+APGeom::Polygon PhysicsObject::shape() const
 {
 	return shape_;
 }

@@ -16,36 +16,25 @@ void Universe::updatePhysics(double dt)
 
 void Universe::renderStep(sf::RenderWindow& window)
 {
-	//int numVisible = 0;
-	//int numInvisible = 0;
-
 	setPolygons();
 	
 	for (auto& poly : polygons_) {
 		window.draw(*poly);
 
 		for (auto& triangle : poly->triangles()) {
-			if (inRenderView(*triangle)) {
-				triangle->setVisibility(true);
-				//++numVisible;
-			}
-			else {
-				triangle->setVisibility(false);
-				//++numInvisible;
-			}
+			bool inView = inRenderView(*triangle);
+			triangle->setVisibility(inView);
 		}
-	}
-	
-	//std::cout << "Visible: " << numVisible << ", invisible: " << numInvisible << std::endl;
+	}	
 }
 
-bool Universe::inRenderView(Triangle& triangle)
+bool Universe::inRenderView(APGeom::Triangle& triangle)
 {
-	int leftBound = camera_->renderBoundX().first;
-	int rightBound = camera_->renderBoundX().second;
+	const int leftBound = camera_->renderBoundX().first;
+	const int rightBound = camera_->renderBoundX().second;
 
-	int upperBound = camera_->renderBoundY().first;
-	int lowerBound = camera_->renderBoundY().second;
+	const int upperBound = camera_->renderBoundY().first;
+	const int lowerBound = camera_->renderBoundY().second;
 
 	return triangle.inView(leftBound, rightBound, upperBound, lowerBound);
 }
@@ -55,8 +44,8 @@ void Universe::setPolygons()
 	polygons_.clear();
 
 	for (auto& poly : terrainGenerator_->polygons()) {
-		polygons_.emplace_back(std::make_shared<Polygon>(poly));
+		polygons_.emplace_back(std::make_shared<APGeom::Polygon>(poly));
 	}
 
-	polygons_.emplace_back(std::make_shared<Polygon>(player_->shape()));
+	polygons_.emplace_back(std::make_shared<APGeom::Polygon>(player_->shape()));
 }
